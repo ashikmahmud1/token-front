@@ -46,6 +46,10 @@ class WebSocket extends Component {
         this.initializeSocket();
     }
 
+    componentWillUnmount() {
+        this.stompClient.disconnect();
+    }
+
     render() {
         return (
             <div>
