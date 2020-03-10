@@ -1,7 +1,7 @@
 /* eslint-disable react/no-multi-comp */
 /* eslint-disable react/display-name */
-import React, { lazy } from 'react';
-import { Redirect } from 'react-router-dom';
+import React, {lazy} from 'react';
+import {Redirect} from 'react-router-dom';
 
 import AuthLayout from './layouts/Auth';
 import ErrorLayout from './layouts/Error';
@@ -10,12 +10,13 @@ import DashboardAnalyticsView from './views/DashboardAnalytics';
 import DashboardDefaultView from './views/DashboardDefault';
 import OverviewView from './views/Overview';
 import PresentationView from './views/Presentation';
+import NormalLayout from './layouts/Normal';
 
 const routes = [
   {
     path: '/',
     exact: true,
-    component: () => <Redirect to="/presentation" />
+    component: () => <Redirect to="/presentation"/>
   },
   {
     path: '/auth',
@@ -32,7 +33,23 @@ const routes = [
         component: lazy(() => import('views/Register'))
       },
       {
-        component: () => <Redirect to="/errors/error-404" />
+        component: () => <Redirect to="/errors/error-404"/>
+      }
+    ]
+  },
+  {
+    path: '/token',
+    component: NormalLayout,
+    routes: [
+      {
+        path: '/token/queue-list/:number',
+        exact: true,
+        component: lazy(() => import('views/Token/TokenQueueList'))
+      },
+      {
+        path: '/token/next-queue-list',
+        exact: true,
+        component: lazy(() => import('views/Token/TokenNextList'))
       }
     ]
   },
@@ -56,7 +73,7 @@ const routes = [
         component: lazy(() => import('views/Error500'))
       },
       {
-        component: () => <Redirect to="/errors/error-404" />
+        component: () => <Redirect to="/errors/error-404"/>
       }
     ]
   },
@@ -159,6 +176,22 @@ const routes = [
         exact: true,
         component: lazy(() => import('views/Profile'))
       },
+      //User Routes
+      {
+        path: '/user/create',
+        exact: true,
+        component: lazy(() => import('views/User/UserCreate'))
+      },
+      {
+        path: '/user/list',
+        exact: true,
+        component: lazy(() => import('views/User/UserList'))
+      },
+      {
+        path: '/user/edit/:id',
+        exact: true,
+        component: lazy(() => import('views/User/UserEdit'))
+      },
       {
         path: '/projects/create',
         exact: true,
@@ -200,7 +233,7 @@ const routes = [
         component: lazy(() => import('views/GettingStarted'))
       },
       {
-        component: () => <Redirect to="/errors/error-404" />
+        component: () => <Redirect to="/errors/error-404"/>
       }
     ]
   }

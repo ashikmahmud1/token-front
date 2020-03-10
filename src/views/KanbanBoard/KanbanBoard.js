@@ -111,6 +111,7 @@ const KanbanBoard = () => {
       <div className={classes.content}>
         <DragDropContext onDragEnd={handleDragEnd}>
           {lists.map(list => (
+
             <Droppable
               droppableId={list.id}
               key={list.id}
