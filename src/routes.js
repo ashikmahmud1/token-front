@@ -192,6 +192,70 @@ const routes = [
         exact: true,
         component: lazy(() => import('views/User/UserEdit'))
       },
+      // Customer Routes
+      {
+        path: '/customer/create',
+        exact: true,
+        component: lazy(() => import('views/Customer/CustomerCreate'))
+      },
+      {
+        path: '/customer/list',
+        exact: true,
+        component: lazy(() => import('views/Customer/CustomerList'))
+      },
+      {
+        path: '/customer/edit/:id',
+        exact: true,
+        component: lazy(() => import('views/Customer/CustomerEdit'))
+      },
+      // Department Routes
+      {
+        path: '/department/create',
+        exact: true,
+        component: lazy(() => import('views/Department/DepartmentCreate'))
+      },
+      {
+        path: '/department/list',
+        exact: true,
+        component: lazy(() => import('views/Department/DepartmentList'))
+      },
+      {
+        path: '/department/edit/:id',
+        exact: true,
+        component: lazy(() => import('views/Department/DepartmentEdit'))
+      },
+      //  Display  Routes
+      {
+        path: '/display/create',
+        exact: true,
+        component: lazy(() => import('views/Display/DisplayCreate'))
+      },
+      {
+        path: '/display/list',
+        exact: true,
+        component: lazy(() => import('views/Display/DisplayList'))
+      },
+      {
+        path: '/display/edit/:id',
+        exact: true,
+        component: lazy(() => import('views/Display/DisplayList'))
+      },
+      // Counter Routes
+      {
+        path: '/counter/create',
+        exact: true,
+        component: lazy(() => import('views/Counter/CounterCreate'))
+      },
+      {
+        path: '/counter/list',
+        exact: true,
+        component: lazy(() => import('views/Counter/CounterList'))
+      },
+      {
+        path: '/counter/edit/:id',
+        exact: true,
+        component: lazy(() => import('views/Counter/CounterEdit'))
+      },
       {
         path: '/projects/create',
         exact: true,
