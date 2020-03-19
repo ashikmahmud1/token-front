@@ -77,35 +77,10 @@ class CallForm extends Component {
     console.log(department);
   };
 
-  // Here load the customer by customer number
-  // load all the departments
-  getTokens = (departments) => {
-    fetch(BASE_URL + '/api/tokens/today')
-      .then(response => response.json())
-      .then(data => {
-        this.arrangeDepartmentTokens(departments, data);
-      })
+  onSetTokens = (departmentTokens) => {
+    this.setState({departmentTokens});
   };
 
-  // RUN THE ALGORITHM FOR TOKEN QUEUE
-  // ARRANGE THE DATA BY CREATED DATE AND PRIORITY
-  arrangeDepartmentTokens = (departments, tokens) => {
-    const department_tokens = {};
-    departments.forEach(department => {
-      department_tokens[department.id] = {department, tokens: tokens.filter(t => t.department.id === department.id)};
-      // sort by created date
-      department_tokens[department.id].tokens.sort(function (a, b) {
-        // Turn your strings into dates, and then subtract them
-        // to get a value that is either negative, positive, or zero.
-        return new Date(a.updatedAt) - new Date(b.updatedAt);
-      });
-      // sort by priority
-      department_tokens[department.id].tokens.sort(function (a, b) {
-        return b.priority - a.priority
-      });
-    });
-    this.setState({departmentTokens: department_tokens});
-  };
 
   componentDidMount() {
     let department_counter = {
@@ -128,7 +103,6 @@ class CallForm extends Component {
       .then(response => response.json())
       .then(departments => {
         this.setState({...this.state, departments, department_id: department_counter.department_id});
-        this.getTokens(departments);
       })
       .catch(error => console.log('error', error));
   }
@@ -332,7 +306,8 @@ class CallForm extends Component {
           onTokenServed={this.onTokenServed}
           onTokenCalled={this.onTokenCalled}
           onTokenDeleted={this.onTokenDeleted}
-          onTokenReset={this.onTokenReset}/>
+          onTokenReset={this.onTokenReset}
+          onSetTokens={this.onSetTokens}/>
       </Card>
     );
   }

@@ -122,6 +122,7 @@ class SocketConnection extends Component {
         return b.priority - a.priority
       });
     });
+    this.props.onSetTokens(department_tokens);
     this.setState({departmentTokens: department_tokens});
   };
 
@@ -155,6 +156,7 @@ SocketConnection.propTypes = {
   onTokenServed: PropTypes.func.isRequired,
   onTokenCalled: PropTypes.func.isRequired,
   onTokenDeleted: PropTypes.func.isRequired,
-  onTokenReset: PropTypes.func.isRequired
+  onTokenReset: PropTypes.func.isRequired,
+  onSetTokens: PropTypes.func.isRequired
 };
 export default SocketConnection;

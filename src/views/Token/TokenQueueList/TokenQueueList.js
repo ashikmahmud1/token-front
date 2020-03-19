@@ -61,7 +61,8 @@ class QueueList extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      departmentTokens: {}
+      departmentTokens: {},
+      displayDepartments: []
     }
   }
 
@@ -95,6 +96,14 @@ class QueueList extends Component {
     console.log(department);
   };
 
+  onSetTokens = (departmentTokens) => {
+    let department_tokens = {};
+    this.state.displayDepartments.forEach(dd => {
+      department_tokens[dd.id] = departmentTokens[dd.id];
+    });
+    this.setState({departmentTokens: department_tokens});
+  };
+
   componentDidMount() {
     const {router} = this.props;
     if (router.match.params.number) {
@@ -109,38 +118,11 @@ class QueueList extends Component {
     // /api/departments/{display_id}/departments
     fetch(BASE_URL + `/api/displays/number/${number}`)
       .then(response => response.json())
-      .then(data => {
-        this.fetchTokens(data);
-        // after fetching all the departments fetch all the tokens
+      .then(display => {
+        this.setState({...this.state, displayDepartments: display.departments || []});
       })
   };
 
-  fetchTokens = (display) => {
-    let departments = display.departments || [];
-    fetch(BASE_URL + '/api/tokens/today')
-      .then(response => response.json())
-      .then(data => {
-        this.arrangeDepartmentTokens(departments, data);
-      })
-  };
-
-  arrangeDepartmentTokens = (departments, tokens) => {
-    const department_tokens = {};
-    departments.forEach(department => {
-      department_tokens[department.id] = {department, tokens: tokens.filter(t => t.department.id === department.id)};
-      // sort by created date
-      department_tokens[department.id].tokens.sort(function (a, b) {
-        // Turn your strings into dates, and then subtract them
-        // to get a value that is either negative, positive, or zero.
-        return new Date(a.updatedAt) - new Date(b.updatedAt);
-      });
-      // sort by priority
-      department_tokens[department.id].tokens.sort(function (a, b) {
-        return b.priority - a.priority
-      });
-    });
-    this.setState({departmentTokens: department_tokens});
-  };
   render() {
     const {departmentTokens} = this.state;
     const {classes} = this.props;
@@ -165,7 +147,8 @@ class QueueList extends Component {
           onTokenServed={this.onTokenServed}
           onTokenCalled={this.onTokenCalled}
           onTokenDeleted={this.onTokenDeleted}
-          onTokenReset={this.onTokenReset}/>
+          onTokenReset={this.onTokenReset}
+          onSetTokens={this.onSetTokens}/>
       </Page>
     )
   }
