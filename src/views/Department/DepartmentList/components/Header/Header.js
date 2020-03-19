@@ -1,15 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { makeStyles } from '@material-ui/styles';
-import { Grid, Typography, Button } from '@material-ui/core';
+import {makeStyles} from '@material-ui/styles';
+import {Grid, Typography, Button} from '@material-ui/core';
 
 const useStyles = makeStyles(() => ({
   root: {}
 }));
 
 const Header = props => {
-  const { className, ...rest } = props;
+  const {className, ...rest} = props;
 
   const classes = useStyles();
 
@@ -26,26 +26,11 @@ const Header = props => {
       >
         <Grid item>
           <Typography
-            component="h2"
-            gutterBottom
-            variant="overline"
-          >
-            Management
-          </Typography>
-          <Typography
             component="h1"
             variant="h3"
           >
-            Users
+            Departments
           </Typography>
-        </Grid>
-        <Grid item>
-          <Button
-            color="primary"
-            variant="contained"
-          >
-            Add User
-          </Button>
         </Grid>
       </Grid>
     </div>

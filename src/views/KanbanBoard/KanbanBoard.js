@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import _ from 'lodash';
-import uuid from 'uuid/v1';
+import { v4 as uuid } from 'uuid';
 import { makeStyles } from '@material-ui/styles';
 
 import axios from 'utils/axios';

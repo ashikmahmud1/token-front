@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { makeStyles } from '@material-ui/styles';
+import React, {useState, useEffect} from 'react';
+import {makeStyles} from '@material-ui/styles';
 
-import axios from 'utils/axios';
-import { Page, SearchBar } from 'components';
-import { Header, UserTable } from './components';
+import {Page} from 'components';
+import {SearchBar} from './components';
+import {Header, CounterTable} from './components';
+import {BASE_URL} from "../../../config";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -17,43 +18,48 @@ const useStyles = makeStyles(theme => ({
 const CounterList = () => {
   const classes = useStyles();
 
-  const [customers, setCustomers] = useState([]);
+  const [counters, setCounters] = useState([]);
 
   useEffect(() => {
     let mounted = true;
 
-    const fetchCustomers = () => {
-      axios.get('/api/management/customers').then(response => {
-        if (mounted) {
-          setCustomers(response.data.customers);
-        }
-      });
+    const fetchCounters = () => {
+      fetch(BASE_URL + "/api/counters/")
+        .then(response => response.json())
+        .then(counters => {
+          if (mounted) {
+            setCounters(counters);
+          }
+        })
+        .catch(error => console.log('error', error));
     };
 
-    fetchCustomers();
+    fetchCounters();
 
     return () => {
       mounted = false;
     };
   }, []);
 
-  const handleFilter = () => {};
-  const handleSearch = () => {};
+  const handleFilter = () => {
+  };
+  const handleSearch = () => {
+  };
 
   return (
     <Page
       className={classes.root}
-      title="Customer Management List"
+      title="Counter List"
     >
-      <Header />
+      <Header/>
       <SearchBar
         onFilter={handleFilter}
         onSearch={handleSearch}
       />
-      {customers && (
-        <UserTable
+      {counters && (
+        <CounterTable
           className={classes.results}
-          customers={customers}
+          counters={counters}
         />
       )}
     </Page>

@@ -13,6 +13,9 @@ import {
   TextField,
   colors
 } from '@material-ui/core';
+import {BASE_URL} from "../../../../../config";
+import useRouter from 'utils/useRouter';
+import SuccessSnackbar from '../SuccessSnackbar';
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -27,6 +30,8 @@ const useStyles = makeStyles(theme => ({
 
 const CounterForm = props => {
   const {profile, className, ...rest} = props;
+  const router = useRouter();
+  const [openSnackbar, setOpenSnackbar] = useState(false);
 
   const classes = useStyles();
   const [values, setValues] = useState({
@@ -46,9 +51,34 @@ const CounterForm = props => {
     });
   };
 
+  const handleSnackbarClose = () => {
+    setOpenSnackbar(false);
+  };
+  const onCreatedCounter = (counter) => {
+    console.log(counter);
+    setOpenSnackbar(true);
+    // redirect to the counter list page
+    setTimeout(() => {
+      router.history.push('/counter/list');
+    }, 1000);
+  };
   const handleSubmit = event => {
     event.preventDefault();
-    console.log(values);
+    let myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+
+    let data = JSON.stringify(values);
+
+    let requestOptions = {
+      method: 'POST',
+      headers: myHeaders,
+      body: data
+    };
+
+    fetch(BASE_URL + "/api/counters/", requestOptions)
+      .then(response => response.json())
+      .then(result => onCreatedCounter(result))
+      .catch(error => console.log('error', error));
   };
 
   return (
@@ -109,6 +139,10 @@ const CounterForm = props => {
           </Button>
         </CardActions>
       </form>
+      <SuccessSnackbar
+        onClose={handleSnackbarClose}
+        open={openSnackbar}
+      />
     </Card>
   );
 };

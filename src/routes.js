@@ -256,6 +256,27 @@ const routes = [
         exact: true,
         component: lazy(() => import('views/Counter/CounterEdit'))
       },
+      // Token Routes
+      {
+        path: '/token-create',
+        exact: true,
+        component: lazy(() => import('views/Token/TokenCreate'))
+      },
+      {
+        path: '/token-call',
+        exact: true,
+        component: lazy(() => import('views/Token/TokenCall'))
+      },
+      {
+        path: '/counter/list',
+        exact: true,
+        component: lazy(() => import('views/Counter/CounterList'))
+      },
+      {
+        path: '/counter/edit/:id',
+        exact: true,
+        component: lazy(() => import('views/Counter/CounterEdit'))
+      },
       {
         path: '/projects/create',
         exact: true,
@@ -280,6 +301,11 @@ const routes = [
         path: '/settings',
         exact: true,
         component: lazy(() => import('views/Settings'))
+      },
+      {
+        path: '/setting',
+        exact: true,
+        component: lazy(() => import('views/Setting'))
       },
       {
         path: '/settings/:tab',

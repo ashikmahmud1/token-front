@@ -1,10 +1,10 @@
 /* eslint-disable no-unused-vars */
-import React, { useState, useRef, useEffect } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import React, {useState, useRef, useEffect} from 'react';
+import {Link as RouterLink} from 'react-router-dom';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
-import { useDispatch } from 'react-redux';
-import { makeStyles } from '@material-ui/styles';
+import {useDispatch} from 'react-redux';
+import {makeStyles} from '@material-ui/styles';
 import {
   AppBar,
   Badge,
@@ -30,8 +30,8 @@ import SearchIcon from '@material-ui/icons/Search';
 
 import axios from 'utils/axios';
 import useRouter from 'utils/useRouter';
-import { PricingModal, NotificationsPopover } from 'components';
-import { logout } from 'actions';
+import {PricingModal, NotificationsPopover} from 'components';
+import {logout} from 'actions';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -93,10 +93,10 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const TopBar = props => {
-  const { onOpenNavBarMobile, className, ...rest } = props;
+  const {onOpenNavBarMobile, className, ...rest} = props;
 
   const classes = useStyles();
-  const { history } = useRouter();
+  const {history} = useRouter();
   const searchRef = useRef(null);
   const dispatch = useDispatch();
   const notificationsRef = useRef(null);
@@ -109,6 +109,7 @@ const TopBar = props => {
   useEffect(() => {
     let mounted = true;
 
+    // here fetch all the displays
     const fetchNotifications = () => {
       axios.get('/api/account/notifications').then(response => {
         if (mounted) {
@@ -182,13 +183,13 @@ const TopBar = props => {
             src="/images/logos/logo--white.svg"
           />
         </RouterLink>
-        <div className={classes.flexGrow} />
+        <div className={classes.flexGrow}/>
         <Hidden smDown>
           <div
             className={classes.search}
             ref={searchRef}
           >
-            <SearchIcon className={classes.searchIcon} />
+            <SearchIcon className={classes.searchIcon}/>
             <Input
               className={classes.searchInput}
               disableUnderline
@@ -216,9 +217,9 @@ const TopBar = props => {
                       onClick={handleSearchPopverClose}
                     >
                       <ListItemIcon>
-                        <SearchIcon />
+                        <SearchIcon/>
                       </ListItemIcon>
-                      <ListItemText primary={search} />
+                      <ListItemText primary={search}/>
                     </ListItem>
                   ))}
                 </List>
@@ -230,7 +231,7 @@ const TopBar = props => {
             onClick={handlePricingOpen}
             variant="contained"
           >
-            <LockIcon className={classes.trialIcon} />
+            <LockIcon className={classes.trialIcon}/>
             Trial expired
           </Button>
         </Hidden>
@@ -243,10 +244,10 @@ const TopBar = props => {
           >
             <Badge
               badgeContent={notifications.length}
-              classes={{ badge: classes.notificationsBadge }}
+              classes={{badge: classes.notificationsBadge}}
               variant="dot"
             >
-              <NotificationsIcon />
+              <NotificationsIcon/>
             </Badge>
           </IconButton>
           <Button
@@ -254,7 +255,7 @@ const TopBar = props => {
             color="inherit"
             onClick={handleLogout}
           >
-            <InputIcon className={classes.logoutIcon} />
+            <InputIcon className={classes.logoutIcon}/>
             Sign out
           </Button>
         </Hidden>
@@ -263,7 +264,7 @@ const TopBar = props => {
             color="inherit"
             onClick={onOpenNavBarMobile}
           >
-            <MenuIcon />
+            <MenuIcon/>
           </IconButton>
         </Hidden>
       </Toolbar>

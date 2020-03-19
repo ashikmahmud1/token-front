@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { makeStyles } from '@material-ui/styles';
+import React, {useState, useEffect} from 'react';
+import {makeStyles} from '@material-ui/styles';
 
 import axios from 'utils/axios';
-import { Page, SearchBar } from 'components';
-import { Header, UserTable } from './components';
+import {Page} from 'components';
+import {SearchBar} from './components';
+import {Header, UserTable} from './components';
+import {BASE_URL} from "../../../config";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -23,11 +25,14 @@ const CustomerList = () => {
     let mounted = true;
 
     const fetchCustomers = () => {
-      axios.get('/api/management/customers').then(response => {
-        if (mounted) {
-          setCustomers(response.data.customers);
-        }
-      });
+      fetch(BASE_URL + "/api/customers/")
+        .then(response => response.json())
+        .then(customers => {
+          if (mounted) {
+            setCustomers(customers);
+          }
+        })
+        .catch(error => console.log('error', error));
     };
 
     fetchCustomers();
@@ -37,15 +42,17 @@ const CustomerList = () => {
     };
   }, []);
 
-  const handleFilter = () => {};
-  const handleSearch = () => {};
+  const handleFilter = () => {
+  };
+  const handleSearch = () => {
+  };
 
   return (
     <Page
       className={classes.root}
       title="Customer Management List"
     >
-      <Header />
+      <Header/>
       <SearchBar
         onFilter={handleFilter}
         onSearch={handleSearch}

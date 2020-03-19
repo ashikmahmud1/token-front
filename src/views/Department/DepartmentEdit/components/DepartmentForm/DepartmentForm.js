@@ -1,7 +1,8 @@
-import React, {useState} from 'react';
+import React from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import {makeStyles} from '@material-ui/styles';
+import Autocomplete from '@material-ui/lab/Autocomplete';
 import {
   Button,
   Card,
@@ -10,9 +11,7 @@ import {
   CardHeader,
   Grid,
   Divider,
-  Switch,
   TextField,
-  Typography,
   colors
 } from '@material-ui/core';
 
@@ -28,37 +27,18 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const DepartmentForm = props => {
-  const {profile, className, ...rest} = props;
-
+  const {profile, className, handleSubmit, handleChange, onChangeDepartmentColor, ...rest} = props;
   const classes = useStyles();
-  const [values, setValues] = useState({
-    firstName: profile.firstName,
-    lastName: profile.lastName,
-    email: profile.email,
-    phone: profile.phone,
-    state: profile.state,
-    country: profile.country,
-    isPublic: profile.isPublic,
-    canHire: profile.canHire
-  });
-
-  const handleChange = event => {
-    event.persist();
-
-    setValues({
-      ...values,
-      [event.target.name]:
-        event.target.type === 'checkbox'
-          ? event.target.checked
-          : event.target.value
-    });
-  };
-
-  const handleSubmit = event => {
-    event.preventDefault();
-  };
-
-  const roles = [{key: 'ROLE_TOKENIST', value: 'Tokenist'}, {key: 'ROLE_STAFF', value: 'Staff'}];
+  const dept_colors = [
+    {key: '#6a1b9a', value: 'Purple'},
+    {key: '#4527a0', value: 'Deep Purple'},
+    {key: '#283593', value: 'Indigo'},
+    {key: '#1565c0', value: 'Blue'},
+    {key: '#0277bd', value: 'Light Blue'},
+    {key: '#00838f', value: 'Cyan'},
+    {key: '#00695c', value: 'Teal'},
+    {key: '#ef6c00', value: 'Amber'},
+  ];
 
   return (
     <Card
@@ -66,7 +46,7 @@ const DepartmentForm = props => {
       className={clsx(classes.root, className)}
     >
       <form onSubmit={handleSubmit}>
-        <CardHeader title="Profile"/>
+        <CardHeader title="Department"/>
         <Divider/>
         <CardContent>
           <Grid
@@ -75,32 +55,17 @@ const DepartmentForm = props => {
           >
             <Grid
               item
-              md={12}
+              md={6}
               xs={12}
             >
               <TextField
                 fullWidth
-                helperText="Please specify the first name"
-                label="Name"
-                name="firstName"
+                helperText="Please specify department name"
+                label="Department Name"
+                name="name"
                 onChange={handleChange}
                 required
-                value={values.firstName}
-                variant="outlined"
-              />
-            </Grid>
-            <Grid
-              item
-              md={12}
-              xs={12}
-            >
-              <TextField
-                fullWidth
-                label="Username"
-                name="lastName"
-                onChange={handleChange}
-                required
-                value={values.lastName}
+                value={profile.name}
                 variant="outlined"
               />
             </Grid>
@@ -111,11 +76,28 @@ const DepartmentForm = props => {
             >
               <TextField
                 fullWidth
-                label="Email Address"
-                name="email"
+                label="Department Letter"
+                name="letter"
                 onChange={handleChange}
                 required
-                value={values.email}
+                value={profile.letter}
+                variant="outlined"
+              />
+            </Grid>
+
+            <Grid
+              item
+              md={6}
+              xs={12}
+            >
+              <TextField
+                fullWidth
+                label="Start Number"
+                name="start_number"
+                onChange={handleChange}
+                value={profile.start_number}
+                type="number"
+                required
                 variant="outlined"
               />
             </Grid>
@@ -124,56 +106,38 @@ const DepartmentForm = props => {
               md={6}
               xs={12}
             >
-              <TextField
-                fullWidth
-                label="Select Role"
-                name="state"
-                onChange={handleChange}
-                select
-                // eslint-disable-next-line react/jsx-sort-props
-                SelectProps={{native: true}}
-                value={values.state}
-                variant="outlined"
-              >
-                {roles.map(role => (
-                  <option
-                    key={role.key}
-                    value={role.value}
-                  >
-                    {role.value}
-                  </option>
-                ))}
-              </TextField>
-            </Grid>
-            <Grid
-              item
-              md={6}
-              xs={12}
-            >
-              <TextField
-                fullWidth
-                label="Password"
-                name="phone"
-                onChange={handleChange}
-                type="password"
-                value={values.phone}
-                variant="outlined"
-              />
-            </Grid>
-            <Grid
-              item
-              md={6}
-              xs={12}
-            >
-              <TextField
-                fullWidth
-                label="Confirm Password"
-                name="country"
-                onChange={handleChange}
-                required
-                type="password"
-                value={values.country}
-                variant="outlined"
+              <Autocomplete
+                id="country-select-demo"
+                options={dept_colors}
+                classes={{
+                  option: classes.option,
+                }}
+                autoHighlight
+                value={dept_colors.find(d => d.key === profile.color) || {}}
+                getOptionLabel={option => option.value || ''}
+                renderOption={option => (
+                  <div style={{display: 'flex', width: '100%', justifyContent: 'space-between'}}
+                       onClick={() => onChangeDepartmentColor(option)}>
+                    <span>{option.value}</span>
+                    <span style={{
+                      width: 20,
+                      height: 20,
+                      borderRadius: 20,
+                      backgroundColor: option.key,
+                    }}/>
+                  </div>
+                )}
+                renderInput={params => (
+                  <TextField
+                    {...params}
+                    label="Select Color"
+                    variant="outlined"
+                    inputProps={{
+                      ...params.inputProps,
+                      autoComplete: 'new-password',
+                    }}
+                  />
+                )}
               />
             </Grid>
           </Grid>
@@ -195,7 +159,10 @@ const DepartmentForm = props => {
 
 DepartmentForm.propTypes = {
   className: PropTypes.string,
-  profile: PropTypes.object.isRequired
+  profile: PropTypes.object.isRequired,
+  handleChange: PropTypes.func.isRequired,
+  handleSubmit: PropTypes.func.isRequired,
+  onChangeDepartmentColor: PropTypes.func.isRequired,
 };
 
 export default DepartmentForm;

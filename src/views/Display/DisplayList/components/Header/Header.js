@@ -26,26 +26,11 @@ const Header = props => {
       >
         <Grid item>
           <Typography
-            component="h2"
-            gutterBottom
-            variant="overline"
-          >
-            Management
-          </Typography>
-          <Typography
             component="h1"
             variant="h3"
           >
-            Users
+            Displays
           </Typography>
-        </Grid>
-        <Grid item>
-          <Button
-            color="primary"
-            variant="contained"
-          >
-            Add User
-          </Button>
         </Grid>
       </Grid>
     </div>

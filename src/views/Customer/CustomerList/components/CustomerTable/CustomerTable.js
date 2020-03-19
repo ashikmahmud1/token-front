@@ -89,9 +89,9 @@ const CustomerTable = props => {
                 <TableHead>
                   <TableRow>
                     <TableCell>Name</TableCell>
-                    <TableCell>Username</TableCell>
-                    <TableCell>Email</TableCell>
-                    <TableCell>Role</TableCell>
+                    <TableCell>Number</TableCell>
+                    <TableCell>Contact</TableCell>
+                    <TableCell>Age</TableCell>
                     <TableCell align="center">Actions</TableCell>
                   </TableRow>
                 </TableHead>
@@ -116,11 +116,15 @@ const CustomerTable = props => {
                           </div>
                         </div>
                       </TableCell>
-                      <TableCell>{customer.location}</TableCell>
                       <TableCell>
-                        {customer.email}
+                        {customer.number}
                       </TableCell>
-                      <TableCell>{customer.type}</TableCell>
+                      <TableCell>
+                        {customer.contact}
+                      </TableCell>
+                      <TableCell>
+                        {customer.age}
+                      </TableCell>
                       <TableCell align="center">
                         <Button
                           color="primary"

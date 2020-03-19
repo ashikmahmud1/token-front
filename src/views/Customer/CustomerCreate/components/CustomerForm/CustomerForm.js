@@ -14,6 +14,8 @@ import {
   colors
 } from '@material-ui/core';
 import {BASE_URL} from "../../../../../config";
+import useRouter from 'utils/useRouter';
+import SuccessSnackbar from '../SuccessSnackbar';
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -28,6 +30,8 @@ const useStyles = makeStyles(theme => ({
 
 const CustomerForm = props => {
   const {profile, className, ...rest} = props;
+  const router = useRouter();
+  const [openSnackbar, setOpenSnackbar] = useState(false);
 
   const classes = useStyles();
   const [values, setValues] = useState({
@@ -49,8 +53,18 @@ const CustomerForm = props => {
     });
   };
 
+  const handleSnackbarClose = () => {
+    setOpenSnackbar(false);
+  };
+
   const onCreatedCustomer = (result) => {
     console.log(result);
+    // show the snackbar
+    setOpenSnackbar(true);
+    // redirect to the customer list page
+    setTimeout(() => {
+      router.history.push('/customer/list');
+    }, 1000);
   };
   const handleSubmit = event => {
     event.preventDefault();
@@ -162,6 +176,10 @@ const CustomerForm = props => {
           </Button>
         </CardActions>
       </form>
+      <SuccessSnackbar
+        onClose={handleSnackbarClose}
+        open={openSnackbar}
+      />
     </Card>
   );
 };

@@ -186,17 +186,22 @@ export default [
         children: [
           {
             title: 'Create',
-            href: '/token/create'
+            href: '/token-create'
           },
           {
             title: 'Call',
-            href: '/token/call'
+            href: '/token-call'
           },
           {
             title: 'List',
-            href: '/token/list'
+            href: '/token-list'
           }
         ]
+      },
+      {
+        title: 'Settings',
+        href: '/setting',
+        icon: SettingsIcon
       },
       // {
       //   title: 'Project',

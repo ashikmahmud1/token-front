@@ -15,6 +15,8 @@ import {
   colors
 } from '@material-ui/core';
 import {BASE_URL} from "../../../../../config";
+import useRouter from 'utils/useRouter';
+import SuccessSnackbar from '../SuccessSnackbar';
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -29,6 +31,8 @@ const useStyles = makeStyles(theme => ({
 
 const DepartmentForm = props => {
   const {profile, className, ...rest} = props;
+  const router = useRouter();
+  const [openSnackbar, setOpenSnackbar] = useState(false);
 
   const classes = useStyles();
   const [values, setValues] = useState({
@@ -60,9 +64,18 @@ const DepartmentForm = props => {
           : event.target.value
     });
   };
+  const handleSnackbarClose = () => {
+    setOpenSnackbar(false);
+  };
 
   const onCreatedDepartment = (department) => {
-    console.log(department)
+    console.log(department);
+    // show the snackbar
+    setOpenSnackbar(true);
+    // redirect to the department list page
+    setTimeout(() => {
+      router.history.push('/department/list');
+    }, 1000);
   };
   const onChangeDepartmentColor = (color) => {
     console.log(color);
@@ -203,6 +216,10 @@ const DepartmentForm = props => {
           </Button>
         </CardActions>
       </form>
+      <SuccessSnackbar
+        onClose={handleSnackbarClose}
+        open={openSnackbar}
+      />
     </Card>
   );
 };

@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/styles';
-
-import axios from 'utils/axios';
-import { Page, SearchBar } from 'components';
-import { Header, UserTable } from './components';
+import { Page } from 'components';
+import { SearchBar } from './components';
+import { Header, DisplayTable } from './components';
+import {BASE_URL} from "../../../config";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -17,20 +17,23 @@ const useStyles = makeStyles(theme => ({
 const DisplayList = () => {
   const classes = useStyles();
 
-  const [customers, setCustomers] = useState([]);
+  const [displays, setDisplays] = useState([]);
 
   useEffect(() => {
     let mounted = true;
 
-    const fetchCustomers = () => {
-      axios.get('/api/management/customers').then(response => {
-        if (mounted) {
-          setCustomers(response.data.customers);
-        }
-      });
+    const fetchDisplays = () => {
+      fetch(BASE_URL + "/api/displays/")
+        .then(response => response.json())
+        .then(displays => {
+          if (mounted) {
+            setDisplays(displays);
+          }
+        })
+        .catch(error => console.log('error', error));
     };
 
-    fetchCustomers();
+    fetchDisplays();
 
     return () => {
       mounted = false;
@@ -50,10 +53,10 @@ const DisplayList = () => {
         onFilter={handleFilter}
         onSearch={handleSearch}
       />
-      {customers && (
-        <UserTable
+      {displays && (
+        <DisplayTable
           className={classes.results}
-          customers={customers}
+          displays={displays}
         />
       )}
     </Page>

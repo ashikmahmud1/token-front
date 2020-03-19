@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import uuid from 'uuid/v1';
+import { v4 as uuid } from 'uuid';
 import { makeStyles } from '@material-ui/styles';
 import { colors } from '@material-ui/core';
 import StarIcon from '@material-ui/icons/Star';

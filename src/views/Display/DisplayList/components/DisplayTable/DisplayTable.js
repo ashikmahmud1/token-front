@@ -47,7 +47,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const DisplayTable = props => {
-  const {className, customers, ...rest} = props;
+  const {className, displays, ...rest} = props;
 
   const classes = useStyles();
 
@@ -73,8 +73,8 @@ const DisplayTable = props => {
         gutterBottom
         variant="body2"
       >
-        {customers.length} Records found. Page {page + 1} of{' '}
-        {Math.ceil(customers.length / rowsPerPage)}
+        {displays.length} Records found. Page {page + 1} of{' '}
+        {Math.ceil(displays.length / rowsPerPage)}
       </Typography>
       <Card>
         <CardHeader
@@ -89,18 +89,15 @@ const DisplayTable = props => {
                 <TableHead>
                   <TableRow>
                     <TableCell>Name</TableCell>
-                    <TableCell>Username</TableCell>
-                    <TableCell>Email</TableCell>
-                    <TableCell>Role</TableCell>
                     <TableCell align="center">Actions</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {customers.slice(0, rowsPerPage).map(customer => (
+                  {displays.slice(0, rowsPerPage).map(display => (
                     <TableRow
                       hover
-                      key={customer.id}
-                      selected={selectedCustomers.indexOf(customer.id) !== -1}
+                      key={display.id}
+                      selected={selectedCustomers.indexOf(display.id) !== -1}
                     >
                       <TableCell>
                         <div className={classes.nameCell}>
@@ -108,19 +105,14 @@ const DisplayTable = props => {
                             <Link
                               color="inherit"
                               component={RouterLink}
-                              to="/management/customers/1"
-                              variant="h6"
+                              target="_blank"
+                              to={"/token/queue-list/" + display.name}
                             >
-                              {customer.name}
+                              {display.name}
                             </Link>
                           </div>
                         </div>
                       </TableCell>
-                      <TableCell>{customer.location}</TableCell>
-                      <TableCell>
-                        {customer.email}
-                      </TableCell>
-                      <TableCell>{customer.type}</TableCell>
                       <TableCell align="center">
                         <Button
                           color="primary"
@@ -151,7 +143,7 @@ const DisplayTable = props => {
         <CardActions className={classes.actions}>
           <TablePagination
             component="div"
-            count={customers.length}
+            count={displays.length}
             onChangePage={handleChangePage}
             onChangeRowsPerPage={handleChangeRowsPerPage}
             page={page}
@@ -167,11 +159,11 @@ const DisplayTable = props => {
 
 DisplayTable.propTypes = {
   className: PropTypes.string,
-  customers: PropTypes.array.isRequired
+  displays: PropTypes.array.isRequired
 };
 
 DisplayTable.defaultProps = {
-  customers: []
+  displays: []
 };
 
 export default DisplayTable;

@@ -1,11 +1,13 @@
 import React, {Component} from 'react';
-import stompClient from "utils/socket";
 
 import {Page} from 'components';
 import {BASE_URL} from "../../../config";
 import QueueColumn from "./components/QueueColumn";
 import {makeStyles} from "@material-ui/styles";
 import useRouter from 'utils/useRouter';
+import * as Stomp from 'stompjs';
+import * as SockJS from 'sockjs-client';
+import Box from "@material-ui/core/Box";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -64,12 +66,27 @@ class QueueList extends Component {
     }
   }
 
+  serverUrl = BASE_URL + '/ws';
+
   onTokenCreated = (token) => {
     const department_tokens = {...this.state.departmentTokens};
     //  check if the departmentTokens contains the key token.department.id
     // if key exist then add the token in the departmentTokens[token.department.id].tokens.push(token);
     if (department_tokens[token.department.id]) {
-      department_tokens[token.department.id].tokens.push(token);
+      let found = department_tokens[token.department.id].tokens.find(t => t.id === token.id);
+      if (!found) {
+        department_tokens[token.department.id].tokens.push(token);
+        // sort by created date
+        department_tokens[token.department.id].tokens.sort(function (a, b) {
+          // Turn your strings into dates, and then subtract them
+          // to get a value that is either negative, positive, or zero.
+          return new Date(a.updatedAt) - new Date(b.updatedAt);
+        });
+        // sort by priority
+        department_tokens[token.department.id].tokens.sort(function (a, b) {
+          return b.priority - a.priority
+        });
+      }
     }
     this.setState({departmentTokens: department_tokens});
   };
@@ -83,8 +100,16 @@ class QueueList extends Component {
       // check if the token status is TOKEN_SERVED then remove the token from the token list
       // else set the token new value
       if (token.status === 'TOKEN_SERVED' || token.status === 'TOKEN_NOT_CAME') {
-        department_tokens[token.department.id].tokens.splice(token_index, 1);
+        department_tokens[token.department.id].tokens = department_tokens[token.department.id].tokens.filter(t => t.id !== token.id)
       } else {
+        // This means token is called.
+        // play the sound with token calling with token number
+        if ('speechSynthesis' in window) {
+          // Synthesis support. Make your web apps talk!
+          let msg = new SpeechSynthesisUtterance('token ' + token.token_number + ' counter ' + token.counter.letter);
+          window.speechSynthesis.speak(msg);
+        }
+        // finally update the token
         department_tokens[token.department.id].tokens[token_index] = token;
       }
     }
@@ -105,22 +130,24 @@ class QueueList extends Component {
     // subscribe all this three channel
     // name of the broker is topics
     // subscribe to the /topics/tokens/created
-    stompClient.subscribe('/topics/tokens/created', (message) => {
+    this.stompClient.subscribe('/topics/tokens/created', (message) => {
       this.onTokenCreated(JSON.parse(message.body));
     });
     // subscribe to the /topics/tokens/updated
-    stompClient.subscribe('/topics/tokens/updated', (message) => {
+    this.stompClient.subscribe('/topics/tokens/updated', (message) => {
       this.onTokenUpdated(JSON.parse(message.body));
     });
     // subscribe to the /topics/tokens/deleted
-    stompClient.subscribe('/topics/tokens/deleted', (message) => {
+    this.stompClient.subscribe('/topics/tokens/deleted', (message) => {
       this.onTokenDeleted(JSON.parse(message.body));
     });
   };
 
   initializeSocket = () => {
+    const ws = new SockJS(this.serverUrl);
+    this.stompClient = Stomp.over(ws);
     const self = this;
-    stompClient.connect({}, function (frame) {
+    this.stompClient.connect({}, function (frame) {
       self.openGlobalSocket();
     });
   };
@@ -159,7 +186,17 @@ class QueueList extends Component {
   arrangeDepartmentTokens = (departments, tokens) => {
     const department_tokens = {};
     departments.forEach(department => {
-      department_tokens[department.id] = {department, tokens: tokens.filter(t => t.department.id === department.id)}
+      department_tokens[department.id] = {department, tokens: tokens.filter(t => t.department.id === department.id)};
+      // sort by created date
+      department_tokens[department.id].tokens.sort(function (a, b) {
+        // Turn your strings into dates, and then subtract them
+        // to get a value that is either negative, positive, or zero.
+        return new Date(a.updatedAt) - new Date(b.updatedAt);
+      });
+      // sort by priority
+      department_tokens[department.id].tokens.sort(function (a, b) {
+        return b.priority - a.priority
+      });
     });
     this.setState({departmentTokens: department_tokens});
   };
@@ -167,23 +204,22 @@ class QueueList extends Component {
   render() {
     const {departmentTokens} = this.state;
     const {classes} = this.props;
+    const totalItems = Object.keys(departmentTokens).length;
 
     return (
       <Page
         className={classes.root}
         title="Token Queue List"
       >
-        <div className={classes.content}>
-          <div className={classes.queueRows}>
-            {
-              Object.keys(departmentTokens).map(key => {
-                return (
-                  <QueueColumn departmentTokens={departmentTokens[key]} key={key}/>
-                )
-              })
-            }
-          </div>
-        </div>
+        <Box display="flex" p={1} width="100%">
+          {
+            Object.keys(departmentTokens).map(key => {
+              return (
+                <QueueColumn departmentTokens={departmentTokens[key]} key={key} totalItems={totalItems}/>
+              )
+            })
+          }
+        </Box>
       </Page>
     )
   }

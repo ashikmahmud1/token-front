@@ -47,11 +47,11 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const DepartmentTable = props => {
-  const {className, customers, ...rest} = props;
+  const {className, departments, deleteDepartment, resetDepartment, ...rest} = props;
 
   const classes = useStyles();
 
-  const [selectedCustomers, setSelectedCustomers] = useState([]);
+  const [selectedDepartments] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
@@ -63,6 +63,7 @@ const DepartmentTable = props => {
     setRowsPerPage(event.target.value);
   };
 
+
   return (
     <div
       {...rest}
@@ -73,8 +74,8 @@ const DepartmentTable = props => {
         gutterBottom
         variant="body2"
       >
-        {customers.length} Records found. Page {page + 1} of{' '}
-        {Math.ceil(customers.length / rowsPerPage)}
+        {departments.length} Records found. Page {page + 1} of{' '}
+        {Math.ceil(departments.length / rowsPerPage)}
       </Typography>
       <Card>
         <CardHeader
@@ -89,18 +90,18 @@ const DepartmentTable = props => {
                 <TableHead>
                   <TableRow>
                     <TableCell>Name</TableCell>
-                    <TableCell>Username</TableCell>
-                    <TableCell>Email</TableCell>
-                    <TableCell>Role</TableCell>
+                    <TableCell>Letter</TableCell>
+                    <TableCell>Start Number</TableCell>
+                    <TableCell>Color</TableCell>
                     <TableCell align="center">Actions</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {customers.slice(0, rowsPerPage).map(customer => (
+                  {departments.slice(0, rowsPerPage).map(department => (
                     <TableRow
                       hover
-                      key={customer.id}
-                      selected={selectedCustomers.indexOf(customer.id) !== -1}
+                      key={department.id}
+                      selected={selectedDepartments.indexOf(department.id) !== -1}
                     >
                       <TableCell>
                         <div className={classes.nameCell}>
@@ -108,37 +109,52 @@ const DepartmentTable = props => {
                             <Link
                               color="inherit"
                               component={RouterLink}
-                              to="/management/customers/1"
+                              to={"/department/edit/" + department.id}
                               variant="h6"
                             >
-                              {customer.name}
+                              {department.name}
                             </Link>
                           </div>
                         </div>
                       </TableCell>
-                      <TableCell>{customer.location}</TableCell>
+                      <TableCell>{department.letter}</TableCell>
                       <TableCell>
-                        {customer.email}
+                        {department.start_number}
                       </TableCell>
-                      <TableCell>{customer.type}</TableCell>
+                      <TableCell>
+                        <div style={{
+                          width: 20,
+                          height: 20,
+                          borderRadius: 20,
+                          backgroundColor: department.color,
+                        }}/>
+                      </TableCell>
                       <TableCell align="center">
                         <Button
                           color="primary"
                           component={RouterLink}
                           size="small"
-                          to="/management/customers/1"
+                          to={"/department/edit/" + department.id}
                           variant="outlined"
                         >
                           Edit
                         </Button>
                         <Button
                           style={{color: '#e53935', marginLeft: 10}}
-                          component={RouterLink}
                           size="small"
-                          to="/management/customers/1"
+                          onClick={() => deleteDepartment(department.id)}
                           variant="outlined"
                         >
                           Delete
+                        </Button>
+                        <Button
+                          style={{marginLeft: 10}}
+                          color="primary"
+                          size="small"
+                          onClick={() => resetDepartment(department.id)}
+                          variant="outlined"
+                        >
+                          Reset
                         </Button>
                       </TableCell>
                     </TableRow>
@@ -151,7 +167,7 @@ const DepartmentTable = props => {
         <CardActions className={classes.actions}>
           <TablePagination
             component="div"
-            count={customers.length}
+            count={departments.length}
             onChangePage={handleChangePage}
             onChangeRowsPerPage={handleChangeRowsPerPage}
             page={page}
@@ -160,18 +176,20 @@ const DepartmentTable = props => {
           />
         </CardActions>
       </Card>
-      <TableEditBar selected={selectedCustomers}/>
+      <TableEditBar selected={selectedDepartments}/>
     </div>
   );
 };
 
 DepartmentTable.propTypes = {
   className: PropTypes.string,
-  customers: PropTypes.array.isRequired
+  departments: PropTypes.array.isRequired,
+  deleteDepartment: PropTypes.func.isRequired,
+  resetDepartment: PropTypes.func.isRequired
 };
 
 DepartmentTable.defaultProps = {
-  customers: []
+  departments: []
 };
 
 export default DepartmentTable;

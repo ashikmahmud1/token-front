@@ -1,51 +1,39 @@
-import React from 'react';
-import {makeStyles} from '@material-ui/styles';
-import {Typography, useTheme, useMediaQuery} from '@material-ui/core';
-
-import {Page} from 'components';
+import {makeStyles} from "@material-ui/styles";
+import React, {useState} from "react";
+import Header from "./components/Header";
+import Page from "components/Page";
+import TokenCallForm from "./components/TokenCallForm";
 
 const useStyles = makeStyles(theme => ({
   root: {
-    padding: theme.spacing(3),
-    paddingTop: '10vh',
-    display: 'flex',
-    flexDirection: 'column',
-    alignContent: 'center'
-  },
-  imageContainer: {
-    marginTop: theme.spacing(6),
-    display: 'flex',
-    justifyContent: 'center'
-  },
-  image: {
+    width: theme.breakpoints.values.lg,
     maxWidth: '100%',
-    width: 560,
-    maxHeight: 300,
-    height: 'auto'
+    margin: '0 auto',
+    padding: theme.spacing(3, 3, 6, 3)
   },
-  buttonContainer: {
-    marginTop: theme.spacing(6),
-    display: 'flex',
-    justifyContent: 'center'
-  }
+  userForm: {
+    marginTop: theme.spacing(3)
+  },
 }));
 
 const TokenCall = () => {
+  const [profile] = useState({
+    counter_id: '',
+    department_id: ''
+  });
   const classes = useStyles();
-  const theme = useTheme();
-  const mobileDevice = useMediaQuery(theme.breakpoints.down('sm'));
+
   return (
     <Page
       className={classes.root}
-      title="Token Call"
+      title="Department Create"
     >
-      <Typography
-        align="center"
-        variant={mobileDevice ? 'h4' : 'h1'}
-      >
-        Token Call
-      </Typography>
+      <Header/>
+      <TokenCallForm
+        profile={profile}
+        className={classes.userForm}/>
     </Page>
   )
 };
+
 export default TokenCall;

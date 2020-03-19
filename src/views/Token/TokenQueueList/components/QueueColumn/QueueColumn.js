@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import {makeStyles} from '@material-ui/styles';
 import './QueueColumn.css';
 import {generateBrighterColor} from "utils/functions";
+import Box from "@material-ui/core/Box";
 
 const useStyles = makeStyles(() => ({
   root: {},
@@ -20,17 +21,16 @@ const useStyles = makeStyles(() => ({
 }));
 
 const QueueColumn = props => {
-  const {departmentTokens} = props;
+  const {departmentTokens, totalItems} = props;
   const {department, tokens} = departmentTokens;
 
   const classes = useStyles();
 
   return (
-    <div className={classes.queueColumn}>
-      <div className={classes.card} style={{margin: 0, marginTop: 20}}>
+      <Box p={1} width={totalItems > 0 ? 1/totalItems: 'auto'}>
         <table className={"queue-table " + classes.queueTable}>
           <thead>
-          <tr style={{backgroundColor: department.color}}>
+          <tr style={{backgroundColor: department.color, color: "#fff"}}>
             <th className="center-align"><h3 style={{margin: 0, padding: 0}}>{department.letter}</h3></th>
             <th className="center-align"><h3 style={{margin: 0, padding: 0}}>Counter</h3></th>
           </tr>
@@ -50,13 +50,13 @@ const QueueColumn = props => {
           }
           </tbody>
         </table>
-      </div>
-    </div>
+      </Box>
   );
 };
 
 QueueColumn.propTypes = {
-  departmentTokens: PropTypes.object
+  departmentTokens: PropTypes.object,
+  totalItems: PropTypes.number
 };
 
 export default QueueColumn;

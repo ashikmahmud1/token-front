@@ -46,8 +46,8 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const UserTable = props => {
-  const {className, customers, ...rest} = props;
+const CounterTable = props => {
+  const {className, counters, ...rest} = props;
 
   const classes = useStyles();
 
@@ -73,8 +73,8 @@ const UserTable = props => {
         gutterBottom
         variant="body2"
       >
-        {customers.length} Records found. Page {page + 1} of{' '}
-        {Math.ceil(customers.length / rowsPerPage)}
+        {counters.length} Records found. Page {page + 1} of{' '}
+        {Math.ceil(counters.length / rowsPerPage)}
       </Typography>
       <Card>
         <CardHeader
@@ -89,18 +89,16 @@ const UserTable = props => {
                 <TableHead>
                   <TableRow>
                     <TableCell>Name</TableCell>
-                    <TableCell>Username</TableCell>
-                    <TableCell>Email</TableCell>
-                    <TableCell>Role</TableCell>
+                    <TableCell>Letter</TableCell>
                     <TableCell align="center">Actions</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {customers.slice(0, rowsPerPage).map(customer => (
+                  {counters.slice(0, rowsPerPage).map(counter => (
                     <TableRow
                       hover
-                      key={customer.id}
-                      selected={selectedCustomers.indexOf(customer.id) !== -1}
+                      key={counter.id}
+                      selected={selectedCustomers.indexOf(counter.id) !== -1}
                     >
                       <TableCell>
                         <div className={classes.nameCell}>
@@ -111,16 +109,12 @@ const UserTable = props => {
                               to="/management/customers/1"
                               variant="h6"
                             >
-                              {customer.name}
+                              {counter.name}
                             </Link>
                           </div>
                         </div>
                       </TableCell>
-                      <TableCell>{customer.location}</TableCell>
-                      <TableCell>
-                        {customer.email}
-                      </TableCell>
-                      <TableCell>{customer.type}</TableCell>
+                      <TableCell>{counter.letter}</TableCell>
                       <TableCell align="center">
                         <Button
                           color="primary"
@@ -151,7 +145,7 @@ const UserTable = props => {
         <CardActions className={classes.actions}>
           <TablePagination
             component="div"
-            count={customers.length}
+            count={counters.length}
             onChangePage={handleChangePage}
             onChangeRowsPerPage={handleChangeRowsPerPage}
             page={page}
@@ -165,13 +159,13 @@ const UserTable = props => {
   );
 };
 
-UserTable.propTypes = {
+CounterTable.propTypes = {
   className: PropTypes.string,
-  customers: PropTypes.array.isRequired
+  counters: PropTypes.array.isRequired
 };
 
-UserTable.defaultProps = {
-  customers: []
+CounterTable.defaultProps = {
+  counters: []
 };
 
-export default UserTable;
+export default CounterTable;
