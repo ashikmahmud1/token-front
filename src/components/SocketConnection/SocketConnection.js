@@ -1,10 +1,10 @@
-import React from "react";
+import React, {Component} from "react";
 import PropTypes from "prop-types";
 import * as Stomp from 'stompjs';
 import * as SockJS from 'sockjs-client';
 import {BASE_URL} from "../../config";
 
-class SocketConnection extends React.Component {
+class SocketConnection extends Component {
 
   serverUrl = BASE_URL + '/ws';
 
@@ -73,6 +73,10 @@ class SocketConnection extends React.Component {
     this.setState({departmentTokens: department_tokens});
   };
 
+  onTokenReset = (department) => {
+    console.log(department);
+  };
+
   openGlobalSocket = () => {
     // subscribe all this three channel
     // name of the broker is topics
@@ -88,6 +92,10 @@ class SocketConnection extends React.Component {
     this.stompClient.subscribe('/topics/tokens/deleted', (message) => {
       this.onTokenDeleted(JSON.parse(message.body));
     });
+    // subscribe to the /topics/tokens/reset
+    this.stompClient.subscribe('/topics/tokens/reset', (message) => {
+      this.onTokenReset(JSON.parse(message.body));
+    });
   };
 
   initializeSocket = () => {
@@ -99,8 +107,40 @@ class SocketConnection extends React.Component {
     });
   };
 
+  arrangeDepartmentTokens = (departments, tokens) => {
+    const department_tokens = {};
+    departments.forEach(department => {
+      department_tokens[department.id] = {department, tokens: tokens.filter(t => t.department.id === department.id)};
+      // sort by created date
+      department_tokens[department.id].tokens.sort(function (a, b) {
+        // Turn your strings into dates, and then subtract them
+        // to get a value that is either negative, positive, or zero.
+        return new Date(a.updatedAt) - new Date(b.updatedAt);
+      });
+      // sort by priority
+      department_tokens[department.id].tokens.sort(function (a, b) {
+        return b.priority - a.priority
+      });
+    });
+    this.setState({departmentTokens: department_tokens});
+  };
+
+  fetchTokens = (departments) => {
+    fetch(BASE_URL + '/api/tokens/today')
+      .then(response => response.json())
+      .then(data => {
+        this.arrangeDepartmentTokens(departments, data);
+      })
+  };
   componentDidMount() {
     this.initializeSocket();
+    // get all the departments
+    fetch(BASE_URL + "/api/departments/")
+      .then(response => response.json())
+      .then(departments => {
+        this.fetchTokens(departments);
+      })
+      .catch(error => console.log('error', error));
   }
 
   render() {
