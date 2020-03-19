@@ -54,9 +54,8 @@ class SocketConnection extends Component {
         // This means token is called.
         // play the sound with token calling with token number
         // finally update the token
-        let message = 'token ' + token.token_number + ' counter ' + token.counter.letter;
         department_tokens[token.department.id].tokens[token_index] = token;
-        this.props.onTokenCalled(department_tokens, message);
+        this.props.onTokenCalled(department_tokens, token);
       }
     }
     this.setState({departmentTokens: department_tokens});
@@ -74,7 +73,11 @@ class SocketConnection extends Component {
   };
 
   onTokenReset = (department) => {
-    console.log(department);
+    const department_tokens = {...this.state.departmentTokens};
+    console.log(department_tokens);
+    department_tokens[department.id].tokens = [];
+    this.props.onTokenReset(department_tokens);
+    this.setState({departmentTokens: department_tokens});
   };
 
   openGlobalSocket = () => {
@@ -133,6 +136,7 @@ class SocketConnection extends Component {
         this.arrangeDepartmentTokens(departments, data);
       })
   };
+
   componentDidMount() {
     this.initializeSocket();
     // get all the departments

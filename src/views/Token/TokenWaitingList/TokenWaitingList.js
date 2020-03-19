@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 
 import {Page} from 'components';
 import {BASE_URL} from "../../../config";
-import QueueColumn from "./components/QueueColumn";
+import WaitingColumn from "./components/WaitingColumn";
 import {makeStyles} from "@material-ui/styles";
 import useRouter from 'utils/useRouter';
 import Box from "@material-ui/core/Box";
@@ -46,7 +46,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 
-const TokenQueueList = () => {
+const TokenWaitingList = () => {
   const classes = useStyles();
   const router = useRouter();
 
@@ -134,16 +134,16 @@ class QueueList extends Component {
     return (
       <Page
         className={classes.root}
-        title="Token Queue List"
+        title="Token Waiting List"
       >
-        <Box display="flex" p={1} width="100%">
+        <Box display="flex" p={1} width="40%">
           {
             Object.keys(departmentTokens).map(key => {
               return (
-                <QueueColumn departmentTokens={departmentTokens[key]}
-                             key={key} totalItems={totalItems}
-                             fromQueue={from_queue}
-                             toQueue={to_queue}/>
+                <WaitingColumn departmentTokens={departmentTokens[key]}
+                               key={key} totalItems={totalItems}
+                               fromQueue={from_queue}
+                               toQueue={to_queue}/>
               )
             })
           }
@@ -160,4 +160,4 @@ class QueueList extends Component {
   }
 }
 
-export default TokenQueueList;
+export default TokenWaitingList;

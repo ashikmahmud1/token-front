@@ -47,6 +47,11 @@ const routes = [
         component: lazy(() => import('views/Token/TokenQueueList'))
       },
       {
+        path: '/token/waiting-list/:number',
+        exact: true,
+        component: lazy(() => import('views/Token/TokenWaitingList'))
+      },
+      {
         path: '/token/next-queue-list',
         exact: true,
         component: lazy(() => import('views/Token/TokenNextList'))

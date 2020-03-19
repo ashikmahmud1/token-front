@@ -73,8 +73,9 @@ class CallForm extends Component {
       this.setState({departmentTokens});
   };
 
-  onTokenReset = (department) => {
-    console.log(department);
+  onTokenReset = (departmentTokens) => {
+    if (departmentTokens)
+      this.setState({departmentTokens});
   };
 
   onSetTokens = (departmentTokens) => {

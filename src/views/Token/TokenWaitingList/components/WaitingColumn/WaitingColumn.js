@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {makeStyles} from '@material-ui/styles';
-import './QueueColumn.css';
+import './WaitingColumn.css';
 import {generateBrighterColor} from "utils/functions";
 import Box from "@material-ui/core/Box";
 
@@ -20,17 +20,22 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-const QueueColumn = props => {
+const WaitingColumn = props => {
   const {departmentTokens, totalItems, fromQueue, toQueue} = props;
   const {department, tokens} = departmentTokens;
   // since array items starts from 0 index
   // we need to make fromQueue - 1 and toQueue - 1
   const display_tokens = [];
   const start_index = fromQueue - 1;
+  const end_index = toQueue - 1;
+  let count = 0;
 
-  for (let i = start_index; i < toQueue; i++) {
-    if (tokens[i])
-      display_tokens.push(tokens[i])
+  for (let i = end_index; i >= start_index; i--) {
+    if (tokens[i] && count < 3) {
+      display_tokens.unshift(tokens[i]);
+      count++;
+    }
+    console.log('count = ' + count);
   }
   const classes = useStyles();
 
@@ -40,7 +45,6 @@ const QueueColumn = props => {
         <thead>
         <tr style={{backgroundColor: department.color, color: "#fff"}}>
           <th className="center-align"><h3 style={{margin: 0, padding: 0}}>{department.letter}</h3></th>
-          <th className="center-align"><h3 style={{margin: 0, padding: 0}}>Counter</h3></th>
         </tr>
         </thead>
         <tbody>
@@ -53,11 +57,6 @@ const QueueColumn = props => {
                     {t.token_number} {t.priority ? '(P)' : ''}
                   </h4>
                 </td>
-                <td className="center-align" style={{margin: 0, padding: 9}}>
-                  <h4 style={{margin: 0, padding: 0}}>
-                    {t.counter ? t.counter.letter : ''}
-                  </h4>
-                </td>
               </tr>
             )
           })
@@ -68,11 +67,11 @@ const QueueColumn = props => {
   );
 };
 
-QueueColumn.propTypes = {
+WaitingColumn.propTypes = {
   departmentTokens: PropTypes.object,
   totalItems: PropTypes.number.isRequired,
   fromQueue: PropTypes.number.isRequired,
   toQueue: PropTypes.number.isRequired
 };
 
-export default QueueColumn;
+export default WaitingColumn;

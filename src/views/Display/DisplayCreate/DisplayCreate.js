@@ -20,6 +20,8 @@ const useStyles = makeStyles(theme => ({
 const DisplayCreate = () => {
   const [profile, setProfile] = useState({
     name: '',
+    from_queue: '',
+    to_queue: '',
     departments: []
   });
   const classes = useStyles();

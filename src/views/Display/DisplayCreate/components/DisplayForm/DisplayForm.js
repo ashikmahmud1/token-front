@@ -43,6 +43,8 @@ const DisplayForm = props => {
   const [values, setValues] = useState({
     name: profile.name,
     departments: profile.departments,
+    from_queue: profile.from_queue,
+    to_queue: profile.to_queue,
     selected_departments: []
   });
 
@@ -84,7 +86,12 @@ const DisplayForm = props => {
     let myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
 
-    let data = JSON.stringify({"name": values.name, "departments": values.selected_departments});
+    let data = JSON.stringify({
+      name: values.name,
+      departments: values.selected_departments,
+      to_queue: values.to_queue,
+      from_queue: values.from_queue
+    });
 
     let requestOptions = {
       method: 'POST',
@@ -124,6 +131,40 @@ const DisplayForm = props => {
                 onChange={handleChange}
                 required
                 value={values.name}
+                variant="outlined"
+              />
+            </Grid>
+            <Grid
+              item
+              md={12}
+              xs={12}
+            >
+              <TextField
+                fullWidth
+                helperText="Please specify from queue list"
+                label="From Queue List"
+                name="from_queue"
+                onChange={handleChange}
+                required
+                type="number"
+                value={values.from_queue}
+                variant="outlined"
+              />
+            </Grid>
+            <Grid
+              item
+              md={12}
+              xs={12}
+            >
+              <TextField
+                fullWidth
+                helperText="Please specify to queue list"
+                label="To Queue List"
+                name="to_queue"
+                onChange={handleChange}
+                required
+                type="number"
+                value={values.to_queue}
                 variant="outlined"
               />
             </Grid>

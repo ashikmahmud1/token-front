@@ -89,6 +89,9 @@ const DisplayTable = props => {
                 <TableHead>
                   <TableRow>
                     <TableCell>Name</TableCell>
+                    <TableCell>Waiting</TableCell>
+                    <TableCell>From Queue</TableCell>
+                    <TableCell>To Queue</TableCell>
                     <TableCell align="center">Actions</TableCell>
                   </TableRow>
                 </TableHead>
@@ -113,6 +116,22 @@ const DisplayTable = props => {
                           </div>
                         </div>
                       </TableCell>
+                      <TableCell>
+                        <div className={classes.nameCell}>
+                          <div>
+                            <Link
+                              color="inherit"
+                              component={RouterLink}
+                              target="_blank"
+                              to={"/token/waiting-list/" + display.name}
+                            >
+                              {display.name}
+                            </Link>
+                          </div>
+                        </div>
+                      </TableCell>
+                      <TableCell>{display.from_queue}</TableCell>
+                      <TableCell>{display.to_queue}</TableCell>
                       <TableCell align="center">
                         <Button
                           color="primary"
