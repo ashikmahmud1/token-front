@@ -243,7 +243,7 @@ const routes = [
       {
         path: '/display/edit/:id',
         exact: true,
-        component: lazy(() => import('views/Display/DisplayList'))
+        component: lazy(() => import('views/Display/DisplayEdit'))
       },
       // Counter Routes
       {

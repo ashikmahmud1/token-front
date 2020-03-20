@@ -137,7 +137,7 @@ const DisplayTable = props => {
                           color="primary"
                           component={RouterLink}
                           size="small"
-                          to="/management/customers/1"
+                          to={"/display/edit/" + display.id}
                           variant="outlined"
                         >
                           Edit
