@@ -29,7 +29,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const SearchBar = props => {
-  const { onFilter, onSearch, className, ...rest } = props;
+  const { onSearch, className, ...rest } = props;
 
   const classes = useStyles();
 
@@ -64,7 +64,6 @@ const SearchBar = props => {
 
 SearchBar.propTypes = {
   className: PropTypes.string,
-  onFilter: PropTypes.func,
   onSearch: PropTypes.func
 };
 

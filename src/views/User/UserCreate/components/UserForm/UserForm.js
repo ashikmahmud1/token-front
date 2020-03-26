@@ -13,9 +13,9 @@ import {
   TextField,
   colors
 } from '@material-ui/core';
-import {BASE_URL} from "../../../../../config";
 import useRouter from 'utils/useRouter';
 import SuccessSnackbar from '../SuccessSnackbar';
+import {BASE_URL} from "../../../../../config";
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -35,14 +35,12 @@ const UserForm = props => {
 
   const classes = useStyles();
   const [values, setValues] = useState({
-    firstName: profile.firstName,
-    lastName: profile.lastName,
+    name: profile.name,
+    username: profile.username,
     email: profile.email,
-    phone: profile.phone,
-    state: profile.state,
-    country: profile.country,
-    isPublic: profile.isPublic,
-    canHire: profile.canHire
+    role: profile.role,
+    password: profile.password,
+    confirmPassword: profile.confirmPassword,
   });
 
   const handleChange = event => {
@@ -73,9 +71,31 @@ const UserForm = props => {
 
   const handleSubmit = event => {
     event.preventDefault();
+    const user = {...values, role:[values.role]};
+
+    if (user.password === user.confirmPassword){
+      let myHeaders = new Headers();
+      myHeaders.append("Content-Type", "application/json");
+
+
+      let data = JSON.stringify(user);
+
+      let requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+        body: data
+      };
+
+      fetch(BASE_URL + "/api/auth/signup", requestOptions)
+        .then(response => response.json())
+        .then(result => onCreatedUser(result))
+        .catch(error => console.log('error', error));
+    } else {
+      alert('password and confirm password should be same.')
+    }
   };
 
-  const roles = [{key: 'ROLE_TOKENIST', value: 'Tokenist'}, {key: 'ROLE_STAFF', value: 'Staff'}];
+  const roles = [{key: 'tokenist', value: 'Tokenist'}, {key: 'staff', value: 'Staff'}];
 
   return (
     <Card
@@ -97,12 +117,12 @@ const UserForm = props => {
             >
               <TextField
                 fullWidth
-                helperText="Please specify the first name"
+                helperText="Please specify name"
                 label="Name"
-                name="firstName"
+                name="name"
                 onChange={handleChange}
                 required
-                value={values.firstName}
+                value={values.name}
                 variant="outlined"
               />
             </Grid>
@@ -114,10 +134,10 @@ const UserForm = props => {
               <TextField
                 fullWidth
                 label="Username"
-                name="lastName"
+                name="username"
                 onChange={handleChange}
                 required
-                value={values.lastName}
+                value={values.username}
                 variant="outlined"
               />
             </Grid>
@@ -132,6 +152,7 @@ const UserForm = props => {
                 name="email"
                 onChange={handleChange}
                 required
+                type="email"
                 value={values.email}
                 variant="outlined"
               />
@@ -144,18 +165,18 @@ const UserForm = props => {
               <TextField
                 fullWidth
                 label="Select Role"
-                name="state"
+                name="role"
                 onChange={handleChange}
                 select
                 // eslint-disable-next-line react/jsx-sort-props
                 SelectProps={{native: true}}
-                value={values.state}
+                value={values.role}
                 variant="outlined"
               >
                 {roles.map(role => (
                   <option
                     key={role.key}
-                    value={role.value}
+                    value={role.key}
                   >
                     {role.value}
                   </option>
@@ -170,10 +191,10 @@ const UserForm = props => {
               <TextField
                 fullWidth
                 label="Password"
-                name="phone"
+                name="password"
                 onChange={handleChange}
                 type="password"
-                value={values.phone}
+                value={values.password}
                 variant="outlined"
               />
             </Grid>
@@ -185,11 +206,11 @@ const UserForm = props => {
               <TextField
                 fullWidth
                 label="Confirm Password"
-                name="country"
+                name="confirmPassword"
                 onChange={handleChange}
                 required
                 type="password"
-                value={values.country}
+                value={values.confirmPassword}
                 variant="outlined"
               />
             </Grid>

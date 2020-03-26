@@ -10,9 +10,7 @@ import {
   CardHeader,
   Grid,
   Divider,
-  Switch,
   TextField,
-  Typography,
   colors
 } from '@material-ui/core';
 
@@ -35,14 +33,6 @@ const GeneralSettings = props => {
   const classes = useStyles();
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [values, setValues] = useState({
-    firstName: profile.firstName,
-    lastName: profile.lastName,
-    email: profile.email,
-    phone: profile.phone,
-    state: profile.state,
-    country: profile.country,
-    isPublic: profile.isPublic,
-    canHire: profile.canHire,
     password: '',
     confirmPassword: ''
   });
@@ -68,15 +58,13 @@ const GeneralSettings = props => {
     setOpenSnackbar(false);
   };
 
-  const states = ['Alabama', 'New York', 'San Francisco'];
-
   return (
     <Card
       {...rest}
       className={clsx(classes.root, className)}
     >
       <form onSubmit={handleSubmit}>
-        <CardHeader title="Profile" />
+        <CardHeader title="Change Password" />
         <Divider />
         <CardContent>
           <Grid

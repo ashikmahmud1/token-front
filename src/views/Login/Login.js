@@ -1,6 +1,6 @@
-import React from 'react';
-import { Link as RouterLink } from 'react-router-dom';
-import { makeStyles } from '@material-ui/styles';
+import React, {useEffect} from 'react';
+import {Link as RouterLink} from 'react-router-dom';
+import {makeStyles} from '@material-ui/styles';
 import {
   Card,
   CardContent,
@@ -12,9 +12,10 @@ import {
 } from '@material-ui/core';
 import LockIcon from '@material-ui/icons/Lock';
 
-import { Page } from 'components';
+import {Page} from 'components';
 import gradients from 'utils/gradients';
-import { LoginForm } from './components';
+import {LoginForm} from './components';
+import useRouter from 'utils/useRouter';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -80,7 +81,12 @@ const useStyles = makeStyles(theme => ({
 
 const Login = () => {
   const classes = useStyles();
-
+  const {history} = useRouter();
+  useEffect(() => {
+    if (localStorage.getItem('token_user')) {
+      history.push('/');
+    }
+  }, []);
   return (
     <Page
       className={classes.root}
@@ -88,7 +94,7 @@ const Login = () => {
     >
       <Card className={classes.card}>
         <CardContent className={classes.content}>
-          <LockIcon className={classes.icon} />
+          <LockIcon className={classes.icon}/>
           <Typography
             gutterBottom
             variant="h3"
@@ -98,8 +104,8 @@ const Login = () => {
           <Typography variant="subtitle2">
             Sign in on the internal platform
           </Typography>
-          <LoginForm className={classes.loginForm} />
-          <Divider className={classes.divider} />
+          <LoginForm className={classes.loginForm}/>
+          <Divider className={classes.divider}/>
           <Link
             align="center"
             color="secondary"

@@ -1,13 +1,13 @@
 /* eslint-disable react/no-multi-comp */
 import React from 'react';
-import { matchPath } from 'react-router-dom';
+import {matchPath} from 'react-router-dom';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/styles';
-import { List, Typography } from '@material-ui/core';
+import {makeStyles} from '@material-ui/styles';
+import {List, Typography} from '@material-ui/core';
 
 import useRouter from 'utils/useRouter';
-import { NavigationListItem } from './components';
+import {NavigationListItem} from './components';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -16,12 +16,12 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const NavigationList = props => {
-  const { pages, ...rest } = props;
+  const {pages, ...rest} = props;
 
   return (
     <List>
       {pages.reduce(
-        (items, page) => reduceChildRoutes({ items, page, ...rest }),
+        (items, page) => reduceChildRoutes({items, page, ...rest}),
         []
       )}
     </List>
@@ -34,7 +34,15 @@ NavigationList.propTypes = {
 };
 
 const reduceChildRoutes = props => {
-  const { router, items, page, depth } = props;
+  const {router, items, page, depth} = props;
+  // get the user from the localStorage
+  if (localStorage.getItem('token_user')) {
+    const token_user = JSON.parse(localStorage.getItem('token_user'));
+    if (page.access) {
+      if (!page.access[token_user.roles[0]])
+        return items;
+    }
+  }
 
   if (page.children) {
     const open = matchPath(router.location.pathname, {
@@ -75,7 +83,7 @@ const reduceChildRoutes = props => {
 };
 
 const Navigation = props => {
-  const { title, pages, className, component: Component, ...rest } = props;
+  const {title, pages, className, component: Component, ...rest} = props;
 
   const classes = useStyles();
   const router = useRouter();

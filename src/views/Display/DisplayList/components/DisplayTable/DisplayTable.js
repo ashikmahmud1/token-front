@@ -51,7 +51,7 @@ const DisplayTable = props => {
 
   const classes = useStyles();
 
-  const [selectedCustomers, setSelectedCustomers] = useState([]);
+  const [selectedCustomers] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
@@ -96,7 +96,7 @@ const DisplayTable = props => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {displays.slice(0, rowsPerPage).map(display => (
+                  {displays.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(display => (
                     <TableRow
                       hover
                       key={display.id}

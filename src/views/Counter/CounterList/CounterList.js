@@ -5,6 +5,7 @@ import {Page} from 'components';
 import {SearchBar} from './components';
 import {Header, CounterTable} from './components';
 import {BASE_URL} from "../../../config";
+import {search} from "utils/functions";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -19,6 +20,7 @@ const CounterList = () => {
   const classes = useStyles();
 
   const [counters, setCounters] = useState([]);
+  const [filterCounters, setFilterCounters] = useState([]);
 
   useEffect(() => {
     let mounted = true;
@@ -29,6 +31,7 @@ const CounterList = () => {
         .then(counters => {
           if (mounted) {
             setCounters(counters);
+            setFilterCounters(counters);
           }
         })
         .catch(error => console.log('error', error));
@@ -41,9 +44,9 @@ const CounterList = () => {
     };
   }, []);
 
-  const handleFilter = () => {
-  };
-  const handleSearch = () => {
+  const handleSearch = (event) => {
+    const filter_array = search(counters, ['name', 'letter'], event.target.value);
+    setFilterCounters(filter_array);
   };
 
   return (
@@ -53,13 +56,12 @@ const CounterList = () => {
     >
       <Header/>
       <SearchBar
-        onFilter={handleFilter}
         onSearch={handleSearch}
       />
       {counters && (
         <CounterTable
           className={classes.results}
-          counters={counters}
+          counters={filterCounters}
         />
       )}
     </Page>

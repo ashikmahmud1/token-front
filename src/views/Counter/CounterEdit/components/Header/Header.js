@@ -19,17 +19,10 @@ const Header = props => {
       className={clsx(classes.root, className)}
     >
       <Typography
-        component="h2"
-        gutterBottom
-        variant="overline"
-      >
-        Edit User
-      </Typography>
-      <Typography
         component="h1"
         variant="h3"
       >
-        Edit User
+        Counter Edit
       </Typography>
     </div>
   );

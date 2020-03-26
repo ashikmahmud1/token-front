@@ -15,7 +15,6 @@ import {
   colors, Typography, FormControlLabel, Checkbox
 } from '@material-ui/core';
 import {BASE_URL} from "../../../../../config";
-import useRouter from 'utils/useRouter';
 import SuccessSnackbar from '../SuccessSnackbar';
 
 const useStyles = makeStyles(theme => ({
@@ -33,7 +32,6 @@ const TokenForm = props => {
   const {profile, className, ...rest} = props;
   const [customers, setCustomers] = useState([]);
   const [departments, setDepartments] = useState([]);
-  const router = useRouter();
   const [openSnackbar, setOpenSnackbar] = useState(false);
 
   const classes = useStyles();
@@ -97,15 +95,11 @@ const TokenForm = props => {
 
   const onCreatedToken = (token) => {
     console.log(token);
-    // show the snackbar
     setOpenSnackbar(true);
-    // redirect to the token list page
-    // setTimeout(() => {
-    //   router.history.push('/token-list');
-    // }, 1000);
   };
   const onChangeCustomer = (event, customer) => {
-    setValues({...values, customer_id: customer.id})
+    if (customer)
+      setValues({...values, customer_id: customer.id})
   };
   const handleSubmit = event => {
     event.preventDefault();
@@ -146,7 +140,7 @@ const TokenForm = props => {
               xs={12}
             >
               <Autocomplete
-                id="country-select-demo"
+                id="select-customer"
                 options={customers}
                 classes={{
                   option: classes.option,

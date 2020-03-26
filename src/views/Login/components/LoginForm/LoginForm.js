@@ -1,22 +1,22 @@
 /* eslint-disable no-unused-vars */
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import validate from 'validate.js';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
-import { useDispatch } from 'react-redux';
-import { makeStyles } from '@material-ui/styles';
-import { Button, TextField } from '@material-ui/core';
+import {useDispatch} from 'react-redux';
+import {makeStyles} from '@material-ui/styles';
+import {Button, TextField} from '@material-ui/core';
 
 import useRouter from 'utils/useRouter';
-import { login } from 'actions';
+import {login} from 'actions';
+import {BASE_URL} from "../../../../config";
 
 const schema = {
-  email: {
-    presence: { allowEmpty: false, message: 'is required' },
-    email: true
+  username: {
+    presence: {allowEmpty: false, message: 'is required'}
   },
   password: {
-    presence: { allowEmpty: false, message: 'is required' }
+    presence: {allowEmpty: false, message: 'is required'}
   }
 };
 
@@ -38,10 +38,10 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const LoginForm = props => {
-  const { className, ...rest } = props;
+  const {className, ...rest} = props;
 
   const classes = useStyles();
-  const router = useRouter();
+  const {history} = useRouter();
   const dispatch = useDispatch();
 
   const [formState, setFormState] = useState({
@@ -56,7 +56,7 @@ const LoginForm = props => {
 
     setFormState(formState => ({
       ...formState,
-      isValid: errors ? false : true,
+      isValid: !errors,
       errors: errors || {}
     }));
   }, [formState.values]);
@@ -83,11 +83,28 @@ const LoginForm = props => {
   const handleSubmit = async event => {
     event.preventDefault();
     // dispatch(login());
-    router.history.push('/');
+    let myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+
+    let data = JSON.stringify(formState.values);
+
+    let requestOptions = {
+      method: 'POST',
+      headers: myHeaders,
+      body: data
+    };
+
+    fetch(BASE_URL + "/api/auth/signin", requestOptions)
+      .then(response => response.json())
+      .then(result => {
+        localStorage.setItem('token_user', JSON.stringify(result));
+        history.push('/');
+      })
+      .catch(error => console.log('error', error));
   };
 
   const hasError = field =>
-    formState.touched[field] && formState.errors[field] ? true : false;
+    !!(formState.touched[field] && formState.errors[field]);
 
   return (
     <form
@@ -97,13 +114,13 @@ const LoginForm = props => {
     >
       <div className={classes.fields}>
         <TextField
-          error={hasError('email')}
+          error={hasError('username')}
           fullWidth
-          helperText={hasError('email') ? formState.errors.email[0] : null}
-          label="Email address"
-          name="email"
+          helperText={hasError('username') ? formState.errors.username[0] : null}
+          label="Username"
+          name="username"
           onChange={handleChange}
-          value={formState.values.email || ''}
+          value={formState.values.username || ''}
           variant="outlined"
         />
         <TextField

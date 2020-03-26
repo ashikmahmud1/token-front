@@ -22,6 +22,7 @@ import ViewModuleIcon from '@material-ui/icons/ViewModule';
 import HomeOutlinedIcon from '@material-ui/icons/HomeOutlined';
 import TvOutlinedIcon from '@material-ui/icons/TvOutlined';
 import ImportContactsOutlinedIcon from '@material-ui/icons/ImportContactsOutlined';
+import AssessmentIcon from '@material-ui/icons/Assessment';
 
 import {Label} from 'components';
 
@@ -108,6 +109,7 @@ export default [
         title: 'User',
         href: '/user',
         icon: PersonIcon,
+        access: {ROLE_ADMIN: true, ROLE_STAFF: false, ROLE_TOKENIST: false},
         children: [
           {
             title: 'Create',
@@ -123,6 +125,7 @@ export default [
         title: 'Department',
         href: '/department',
         icon: PeopleIcon,
+        access: {ROLE_ADMIN: true, ROLE_STAFF: false, ROLE_TOKENIST: false},
         children: [
           {
             title: 'Create',
@@ -138,6 +141,7 @@ export default [
         title: 'Customer',
         href: '/customer',
         icon: PersonIcon,
+        access: {ROLE_ADMIN: true, ROLE_STAFF: false, ROLE_TOKENIST: true},
         children: [
           {
             title: 'Create',
@@ -153,6 +157,7 @@ export default [
         title: 'Counter',
         href: '/counter',
         icon: HomeOutlinedIcon,
+        access: {ROLE_ADMIN: true, ROLE_STAFF: false, ROLE_TOKENIST: false},
         children: [
           {
             title: 'Create',
@@ -168,6 +173,7 @@ export default [
         title: 'Display',
         href: '/display',
         icon: TvOutlinedIcon,
+        access: {ROLE_ADMIN: true, ROLE_STAFF: false, ROLE_TOKENIST: false},
         children: [
           {
             title: 'Create',
@@ -183,6 +189,7 @@ export default [
         title: 'Token',
         href: '/token',
         icon: ImportContactsOutlinedIcon,
+        access: {ROLE_ADMIN: true, ROLE_STAFF: true, ROLE_TOKENIST: false},
         children: [
           {
             title: 'Create',
@@ -191,17 +198,34 @@ export default [
           {
             title: 'Call',
             href: '/token-call'
+          }
+        ]
+      },
+      {
+        title: 'Report',
+        href: '/report',
+        icon: AssessmentIcon,
+        access: {ROLE_ADMIN: true, ROLE_STAFF: false, ROLE_TOKENIST: false},
+        children: [
+          {
+            title: 'Overall Report',
+            href: '/overall-report'
           },
           {
-            title: 'List',
-            href: '/token-list'
+            title: 'User Report',
+            href: '/user-report'
+          },
+          {
+            title: 'Served Report',
+            href: '/served-report'
           }
         ]
       },
       {
         title: 'Settings',
         href: '/setting',
-        icon: SettingsIcon
+        icon: SettingsIcon,
+        access: {ROLE_ADMIN: true, ROLE_STAFF: true, ROLE_TOKENIST: true},
       },
       // {
       //   title: 'Project',

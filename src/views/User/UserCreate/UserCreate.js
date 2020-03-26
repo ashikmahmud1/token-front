@@ -17,15 +17,13 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const UserCreate = () => {
-  const [profile, setProfile] = useState({
-    firstName: '',
-    lastName: '',
+  const [profile] = useState({
+    name: '',
+    username: '',
     email: '',
-    phone: '',
-    state: 'ROLE_TOKENIST',
-    country: '',
-    isPublic: true,
-    canHire: true
+    role: 'tokenist',
+    password: '',
+    confirmPassword: '',
   });
   const classes = useStyles();
 

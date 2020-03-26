@@ -47,11 +47,11 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const UserTable = props => {
-  const {className, customers, ...rest} = props;
+  const {className, users, ...rest} = props;
 
   const classes = useStyles();
 
-  const [selectedCustomers, setSelectedCustomers] = useState([]);
+  const [selectedCustomers] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
@@ -63,6 +63,9 @@ const UserTable = props => {
     setRowsPerPage(event.target.value);
   };
 
+  const roles = {'ROLE_TOKENIST': 'Tokenist', 'ROLE_STAFF': 'Staff', 'ROLE_ADMIN': 'Admin'};
+
+
   return (
     <div
       {...rest}
@@ -73,8 +76,8 @@ const UserTable = props => {
         gutterBottom
         variant="body2"
       >
-        {customers.length} Records found. Page {page + 1} of{' '}
-        {Math.ceil(customers.length / rowsPerPage)}
+        {users.length} Records found. Page {page + 1} of{' '}
+        {Math.ceil(users.length / rowsPerPage)}
       </Typography>
       <Card>
         <CardHeader
@@ -96,11 +99,11 @@ const UserTable = props => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {customers.slice(0, rowsPerPage).map(customer => (
+                  {users.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(user => (
                     <TableRow
                       hover
-                      key={customer.id}
-                      selected={selectedCustomers.indexOf(customer.id) !== -1}
+                      key={user.id}
+                      selected={selectedCustomers.indexOf(user.id) !== -1}
                     >
                       <TableCell>
                         <div className={classes.nameCell}>
@@ -108,25 +111,25 @@ const UserTable = props => {
                             <Link
                               color="inherit"
                               component={RouterLink}
-                              to="/management/customers/1"
+                              to={"/user/edit/" + user.id}
                               variant="h6"
                             >
-                              {customer.name}
+                              {user.name}
                             </Link>
                           </div>
                         </div>
                       </TableCell>
-                      <TableCell>{customer.location}</TableCell>
+                      <TableCell>{user.username}</TableCell>
                       <TableCell>
-                        {customer.email}
+                        {user.email}
                       </TableCell>
-                      <TableCell>{customer.type}</TableCell>
+                      <TableCell>{roles[user.roles[0].name]}</TableCell>
                       <TableCell align="center">
                         <Button
                           color="primary"
                           component={RouterLink}
                           size="small"
-                          to="/management/customers/1"
+                          to={"/user/edit/" + user.id}
                           variant="outlined"
                         >
                           Edit
@@ -135,7 +138,7 @@ const UserTable = props => {
                           style={{color: '#e53935', marginLeft: 10}}
                           component={RouterLink}
                           size="small"
-                          to="/management/customers/1"
+                          to="/management/users/1"
                           variant="outlined"
                         >
                           Delete
@@ -151,7 +154,7 @@ const UserTable = props => {
         <CardActions className={classes.actions}>
           <TablePagination
             component="div"
-            count={customers.length}
+            count={users.length}
             onChangePage={handleChangePage}
             onChangeRowsPerPage={handleChangeRowsPerPage}
             page={page}
@@ -167,11 +170,11 @@ const UserTable = props => {
 
 UserTable.propTypes = {
   className: PropTypes.string,
-  customers: PropTypes.array.isRequired
+  users: PropTypes.array.isRequired
 };
 
 UserTable.defaultProps = {
-  customers: []
+  users: []
 };
 
 export default UserTable;

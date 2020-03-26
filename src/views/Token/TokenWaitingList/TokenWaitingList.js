@@ -64,7 +64,8 @@ class QueueList extends Component {
       departmentTokens: {},
       displayDepartments: [],
       from_queue: 0,
-      to_queue: 0
+      to_queue: 0,
+      lastThreeTokens: []
     }
   }
 
@@ -72,17 +73,32 @@ class QueueList extends Component {
     this.onSetTokens(departmentTokens);
   };
 
-  onTokenServed = (departmentTokens) => {
+  onTokenServed = (departmentTokens, token) => {
     this.onSetTokens(departmentTokens);
+    if (this.state.departmentTokens[token.department.id]) {
+      const display_tokens = [];
+      let tokens = this.state.departmentTokens[token.department.id].tokens;
+      const start_index = this.state.from_queue - 1;
+      const end_index = this.state.to_queue - 1;
+      let count = 0;
+
+      for (let i = end_index; i >= start_index; i--) {
+        if (tokens[i] && count < 3) {
+          display_tokens.unshift(tokens[i]);
+          count++;
+        }
+      }
+      if (display_tokens.length > 0) {
+        // take the last token and make sound
+        let message = 'last token ' + display_tokens[display_tokens.length - 1].token_number;
+        // Synthesis support. Make your web apps talk!
+        let msg = new SpeechSynthesisUtterance(message);
+        window.speechSynthesis.speak(msg);
+      }
+    }
   };
 
-  onTokenCalled = (departmentTokens, token) => {
-    if (this.state.departmentTokens[token.department.id]) {
-      let message = 'token ' + token.token_number + ' counter ' + token.counter.letter;
-      // Synthesis support. Make your web apps talk!
-      let msg = new SpeechSynthesisUtterance(message);
-      window.speechSynthesis.speak(msg);
-    }
+  onTokenCalled = (departmentTokens) => {
     this.onSetTokens(departmentTokens);
   };
 

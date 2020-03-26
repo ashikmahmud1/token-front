@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { makeStyles } from '@material-ui/styles';
+import React, {useState, useEffect} from 'react';
+import {makeStyles} from '@material-ui/styles';
 
-import axios from 'utils/axios';
-import { Page, SearchBar } from 'components';
-import { Header, UserTable } from './components';
+import {Page} from 'components';
+import {SearchBar} from './components';
+import {Header, UserTable} from './components';
+import {BASE_URL} from "../../../config";
+import {search} from "utils/functions";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -17,43 +19,49 @@ const useStyles = makeStyles(theme => ({
 const UserList = () => {
   const classes = useStyles();
 
-  const [customers, setCustomers] = useState([]);
+  const [users, setUsers] = useState([]);
+  const [filterUsers, setFilterUsers] = useState([]);
 
   useEffect(() => {
     let mounted = true;
 
-    const fetchCustomers = () => {
-      axios.get('/api/management/customers').then(response => {
-        if (mounted) {
-          setCustomers(response.data.customers);
-        }
-      });
+    const fetchUsers = () => {
+      fetch(BASE_URL + "/api/users/")
+        .then(response => response.json())
+        .then(users => {
+          if (mounted) {
+            setUsers(users);
+            setFilterUsers(users);
+          }
+        })
+        .catch(error => console.log('error', error));
     };
 
-    fetchCustomers();
+    fetchUsers();
 
     return () => {
       mounted = false;
     };
   }, []);
 
-  const handleFilter = () => {};
-  const handleSearch = () => {};
+  const handleSearch = (event) => {
+    const filter_array = search(users, ['name', 'username', 'email'], event.target.value);
+    setFilterUsers(filter_array);
+  };
 
   return (
     <Page
       className={classes.root}
-      title="Customer Management List"
+      title="User Management List"
     >
-      <Header />
+      <Header/>
       <SearchBar
-        onFilter={handleFilter}
         onSearch={handleSearch}
       />
-      {customers && (
+      {users && (
         <UserTable
           className={classes.results}
-          customers={customers}
+          users={filterUsers}
         />
       )}
     </Page>

@@ -1,14 +1,14 @@
 import React from 'react';
-import { Router } from 'react-router-dom';
-import { createBrowserHistory } from 'history';
+import {Router} from 'react-router-dom';
+import {createBrowserHistory} from 'history';
 import MomentUtils from '@date-io/moment';
-import { Provider as StoreProvider } from 'react-redux';
-import { ThemeProvider } from '@material-ui/styles';
-import { MuiPickersUtilsProvider } from '@material-ui/pickers';
-import { renderRoutes } from 'react-router-config';
+import {Provider as StoreProvider} from 'react-redux';
+import {ThemeProvider} from '@material-ui/styles';
+import {MuiPickersUtilsProvider} from '@material-ui/pickers';
+import {renderRoutes} from 'react-router-config';
 
 import theme from './theme';
-import { configureStore } from './store';
+import {configureStore} from './store';
 import routes from './routes';
 import {
   ScrollReset,
@@ -31,9 +31,9 @@ const App = () => {
       <ThemeProvider theme={theme}>
         <MuiPickersUtilsProvider utils={MomentUtils}>
           <Router history={history}>
-            <ScrollReset />
-            <GoogleAnalytics />
-            <CookiesNotification />
+            <ScrollReset/>
+            <GoogleAnalytics/>
+            <CookiesNotification/>
             {renderRoutes(routes)}
           </Router>
         </MuiPickersUtilsProvider>

@@ -29,7 +29,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const SearchBar = props => {
-  const { onFilter, onSearch, className, ...rest } = props;
+  const { onSearch, className, ...rest } = props;
 
   const classes = useStyles();
 
@@ -51,11 +51,11 @@ const SearchBar = props => {
           className={classes.filterButton}
           color="primary"
           size="small"
-          to="/department/create"
+          to="/user/create"
           component={RouterLink}
           variant="outlined"
         >
-          <AddCircleOutlineOutlinedIcon className={classes.filterIcon} /> Department
+          <AddCircleOutlineOutlinedIcon className={classes.filterIcon} /> User
         </Button>
       </Grid>
     </Grid>
@@ -64,7 +64,6 @@ const SearchBar = props => {
 
 SearchBar.propTypes = {
   className: PropTypes.string,
-  onFilter: PropTypes.func,
   onSearch: PropTypes.func
 };
 

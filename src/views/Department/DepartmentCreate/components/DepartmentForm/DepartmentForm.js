@@ -83,7 +83,6 @@ const DepartmentForm = props => {
   };
   const handleSubmit = event => {
     event.preventDefault();
-    console.log(values);
     let myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
 

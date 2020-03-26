@@ -6,6 +6,7 @@ import {SearchBar} from './components';
 import {Header, DepartmentTable} from './components';
 import {BASE_URL} from "../../../config";
 import SocketConnection from "../../../components/SocketConnection";
+import {search} from "utils/functions";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -20,6 +21,7 @@ const DepartmentList = () => {
   const classes = useStyles();
 
   const [departments, setDepartments] = useState([]);
+  const [filterDepartments, setFilterDepartments] = useState([]);
   const [departmentTokens, setDepartmentTokens] = useState({});
 
   useEffect(() => {
@@ -31,6 +33,7 @@ const DepartmentList = () => {
         .then(departments => {
           if (mounted) {
             setDepartments(departments);
+            setFilterDepartments(departments);
           }
         })
         .catch(error => console.log('error', error));
@@ -43,9 +46,9 @@ const DepartmentList = () => {
     };
   }, []);
 
-  const handleFilter = () => {
-  };
-  const handleSearch = () => {
+  const handleSearch = (event) => {
+    const filter_array = search(departments, ['name', 'letter'], event.target.value);
+    setFilterDepartments(filter_array);
   };
   const onTokenCreated = (departmentTokens) => {
     if (departmentTokens)
@@ -80,6 +83,7 @@ const DepartmentList = () => {
   const filterDepartment = id => {
     let filter_departments = departments.filter(d => parseInt(d.id) !== parseInt(id));
     setDepartments(filter_departments);
+    setFilterDepartments(filter_departments);
   };
   const deleteDepartment = id => {
     let requestOptions = {
@@ -100,6 +104,7 @@ const DepartmentList = () => {
     if (reset_department_index !== -1) {
       new_departments[reset_department_index] = department;
       setDepartments(new_departments);
+      setFilterDepartments(new_departments);
     }
   };
   const resetDepartment = id => {
@@ -135,7 +140,6 @@ const DepartmentList = () => {
     >
       <Header/>
       <SearchBar
-        onFilter={handleFilter}
         onSearch={handleSearch}
       />
       {departments.length > 0 && (
@@ -143,7 +147,7 @@ const DepartmentList = () => {
           deleteDepartment={deleteDepartment}
           resetDepartment={resetDepartment}
           className={classes.results}
-          departments={departments}
+          departments={filterDepartments}
         />
       )}
       <SocketConnection

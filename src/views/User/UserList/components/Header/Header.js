@@ -39,14 +39,6 @@ const Header = props => {
             Users
           </Typography>
         </Grid>
-        <Grid item>
-          <Button
-            color="primary"
-            variant="contained"
-          >
-            Add User
-          </Button>
-        </Grid>
       </Grid>
     </div>
   );

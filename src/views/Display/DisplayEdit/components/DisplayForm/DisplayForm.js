@@ -140,7 +140,7 @@ const DisplayForm = props => {
             type="submit"
             variant="contained"
           >
-            Submit
+            Save Changes
           </Button>
         </CardActions>
       </form>

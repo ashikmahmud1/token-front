@@ -51,7 +51,7 @@ const CounterTable = props => {
 
   const classes = useStyles();
 
-  const [selectedCustomers, setSelectedCustomers] = useState([]);
+  const [selectedCustomers] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
@@ -94,7 +94,7 @@ const CounterTable = props => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {counters.slice(0, rowsPerPage).map(counter => (
+                  {counters.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(counter => (
                     <TableRow
                       hover
                       key={counter.id}
@@ -106,7 +106,7 @@ const CounterTable = props => {
                             <Link
                               color="inherit"
                               component={RouterLink}
-                              to="/management/customers/1"
+                              to={"/counter/edit/" + counter.id}
                               variant="h6"
                             >
                               {counter.name}
@@ -120,7 +120,7 @@ const CounterTable = props => {
                           color="primary"
                           component={RouterLink}
                           size="small"
-                          to="/management/customers/1"
+                          to={"/counter/edit/" + counter.id}
                           variant="outlined"
                         >
                           Edit

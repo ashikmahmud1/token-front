@@ -96,7 +96,7 @@ const CustomerTable = props => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {customers.slice(0, rowsPerPage).map(customer => (
+                  {customers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(customer => (
                     <TableRow
                       hover
                       key={customer.id}
@@ -108,7 +108,7 @@ const CustomerTable = props => {
                             <Link
                               color="inherit"
                               component={RouterLink}
-                              to="/management/customers/1"
+                              to={"/customer/edit/" + customer.id}
                               variant="h6"
                             >
                               {customer.name}
@@ -130,7 +130,7 @@ const CustomerTable = props => {
                           color="primary"
                           component={RouterLink}
                           size="small"
-                          to="/management/customers/1"
+                          to={"/customer/edit/" + customer.id}
                           variant="outlined"
                         >
                           Edit

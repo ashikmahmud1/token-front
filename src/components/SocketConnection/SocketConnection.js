@@ -27,11 +27,13 @@ class SocketConnection extends Component {
         department_tokens[token.department.id].tokens.sort(function (a, b) {
           // Turn your strings into dates, and then subtract them
           // to get a value that is either negative, positive, or zero.
-          return new Date(a.updatedAt) - new Date(b.updatedAt);
+          return (new Date(a.updatedAt) - new Date(b.updatedAt))
         });
         // sort by priority
         department_tokens[token.department.id].tokens.sort(function (a, b) {
-          return b.priority - a.priority
+          // Turn your strings into dates, and then subtract them
+          // to get a value that is either negative, positive, or zero.
+          return b.priority - a.priority;
         });
       }
       this.props.onTokenCreated(department_tokens);
@@ -49,7 +51,7 @@ class SocketConnection extends Component {
       // else set the token new value
       if (token.status === 'TOKEN_SERVED' || token.status === 'TOKEN_NOT_CAME') {
         department_tokens[token.department.id].tokens = department_tokens[token.department.id].tokens.filter(t => t.id !== token.id);
-        this.props.onTokenServed(department_tokens);
+        this.props.onTokenServed(department_tokens, token);
       } else {
         // This means token is called.
         // play the sound with token calling with token number
@@ -117,13 +119,16 @@ class SocketConnection extends Component {
       // sort by created date
       department_tokens[department.id].tokens.sort(function (a, b) {
         // Turn your strings into dates, and then subtract them
-        // to get a value that is either negative, positive, or zero.
-        return new Date(a.updatedAt) - new Date(b.updatedAt);
+        // to get a value that is either negative, positive, or zero.s
+        return (new Date(a.updatedAt) - new Date(b.updatedAt))
       });
       // sort by priority
       department_tokens[department.id].tokens.sort(function (a, b) {
-        return b.priority - a.priority
+        // Turn your strings into dates, and then subtract them
+        // to get a value that is either negative, positive, or zero.s
+        return b.priority - a.priority;
       });
+      // sort by token status where status = TOKEN_CALLED
     });
     this.props.onSetTokens(department_tokens);
     this.setState({departmentTokens: department_tokens});
@@ -146,6 +151,11 @@ class SocketConnection extends Component {
         this.fetchTokens(departments);
       })
       .catch(error => console.log('error', error));
+  }
+
+  componentWillUnmount() {
+    // close the socket connection
+    this.stompClient.disconnect()
   }
 
   render() {

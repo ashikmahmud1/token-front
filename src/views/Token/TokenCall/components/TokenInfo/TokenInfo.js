@@ -12,8 +12,9 @@ import {
   Table,
   TableBody,
   TableRow,
-  TableCell,
+  TableCell, Radio, Typography, TextField, Grid, FormControlLabel, Checkbox,
 } from '@material-ui/core';
+import Box from "@material-ui/core/Box";
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -33,9 +34,30 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const TokenInfo = props => {
-  const {customer, className, onStop, onNext, onReCall, ...rest} = props;
+  const {customer, type, otherText, NOT_PRESENT, className, onStop, onNext, onReCall, onChangeType, onChangeText, ...rest} = props;
 
   const classes = useStyles();
+
+  const options = [
+    {
+      value: 'type1'
+    },
+    {
+      value: 'type2'
+    },
+    {
+      value: 'type3'
+    },
+    {
+      value: 'type4'
+    },
+    {
+      value: 'type5'
+    },
+    {
+      value: 'other'
+    }
+  ];
 
 
   return (
@@ -51,14 +73,76 @@ const TokenInfo = props => {
             <TableRow selected>
               <TableCell>Counter No</TableCell>
               <TableCell>{customer.counter ? customer.counter.letter : ""}</TableCell>
+              <TableCell/>
             </TableRow>
             <TableRow>
               <TableCell>Department Name</TableCell>
               <TableCell>{customer.department ? customer.department.name : ""}</TableCell>
+              <TableCell/>
             </TableRow>
             <TableRow selected>
               <TableCell>Current Token</TableCell>
               <TableCell>{customer.token ? customer.token.token_number : ""}</TableCell>
+              <TableCell/>
+            </TableRow>
+            <TableRow selected>
+              <TableCell>
+                <Box display="flex" flexDirection="column">
+                  <TextField
+                    fullWidth
+                    label="Select Type"
+                    name="type"
+                    onChange={onChangeText}
+                    select
+                    // eslint-disable-next-line react/jsx-sort-props
+                    SelectProps={{native: true}}
+                    value={type}
+                    variant="outlined"
+                  >
+                    {options.map(option => (
+                      <option
+                        key={option.value}
+                        value={option.value}
+                      >
+                        {option.value}
+                      </option>
+                    ))}
+                  </TextField>
+
+                  {
+                    (type === 'other') && (
+                      <TextField
+                        style={{marginTop:20}}
+                        fullWidth
+                        label="Enter type"
+                        name="otherText"
+                        onChange={onChangeText}
+                        value={otherText}
+                        variant="outlined"
+                      />
+                    )
+                  }
+                </Box>
+              </TableCell>
+              <TableCell/>
+              <TableCell/>
+            </TableRow>
+            <TableRow selected>
+              <TableCell>NOT PRESENT</TableCell>
+              <TableCell>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      onChange={(event) => onChangeText(event)}
+                      name='NOT_PRESENT'
+                      color="primary"
+                      checked={NOT_PRESENT}
+                    />
+                  }
+                  label=''
+                />
+              </TableCell>
+              <TableCell/>
             </TableRow>
           </TableBody>
         </Table>
@@ -73,7 +157,7 @@ const TokenInfo = props => {
           Re-call
         </Button>
         <Button
-          style={{marginLeft: 20, backgroundColor: "#ef6c00", color: "#fff"}}
+          style={{marginLeft: 10, backgroundColor: "#ef6c00", color: "#fff"}}
           size="small"
           onClick={() => onNext()}
           variant="contained"
@@ -81,7 +165,7 @@ const TokenInfo = props => {
           Next
         </Button>
         <Button
-          style={{marginLeft: 20, backgroundColor: "#d32f2f", color: "#fff"}}
+          style={{marginLeft: 10, backgroundColor: "#d32f2f", color: "#fff"}}
           size="small"
           onClick={() => onStop()}
           variant="contained"
@@ -98,7 +182,12 @@ TokenInfo.propTypes = {
   customer: PropTypes.object.isRequired,
   onReCall: PropTypes.func.isRequired,
   onStop: PropTypes.func.isRequired,
-  onNext: PropTypes.func.isRequired
+  onNext: PropTypes.func.isRequired,
+  type: PropTypes.string.isRequired,
+  NOT_PRESENT: PropTypes.bool.isRequired,
+  otherText: PropTypes.string.isRequired,
+  onChangeType: PropTypes.func.isRequired,
+  onChangeText: PropTypes.func.isRequired
 };
 
 export default TokenInfo;

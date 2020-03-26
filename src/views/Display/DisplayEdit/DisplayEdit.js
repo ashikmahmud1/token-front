@@ -96,12 +96,12 @@ const DisplayCreate = () => {
     });
 
     let requestOptions = {
-      method: 'POST',
+      method: 'PUT',
       headers: myHeaders,
       body: data
     };
 
-    fetch(BASE_URL + "/api/displays/", requestOptions)
+    fetch(BASE_URL + "/api/displays/" + id, requestOptions)
       .then(response => response.json())
       .then(result => onCreatedDisplay(result))
       .catch(error => console.log('error', error));
@@ -157,7 +157,8 @@ const DisplayCreate = () => {
       <DisplayForm
         profile={profile}
         className={classes.userForm}
-        handleChange={handleChange} handleSubmit={handleSubmit}
+        handleChange={handleChange}
+        handleSubmit={handleSubmit}
         onChangeDepartmentSelection={onChangeDepartmentSelection}/>
 
       <SuccessSnackbar

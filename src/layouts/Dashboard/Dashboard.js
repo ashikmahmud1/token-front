@@ -1,10 +1,10 @@
-import React, {Suspense, useState} from 'react';
+import React, {Suspense, useEffect, useState} from 'react';
 import {renderRoutes} from 'react-router-config';
 import PropTypes from 'prop-types';
 import {makeStyles} from '@material-ui/styles';
 import {LinearProgress} from '@material-ui/core';
-
 import {NavBar, TopBar} from './components';
+import useRouter from 'utils/useRouter';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -37,6 +37,7 @@ const useStyles = makeStyles(() => ({
 
 const Dashboard = props => {
   const {route} = props;
+  const {history} = useRouter();
 
   const classes = useStyles();
   const [openNavBarMobile, setOpenNavBarMobile] = useState(false);
@@ -48,6 +49,12 @@ const Dashboard = props => {
   const handleNavBarMobileClose = () => {
     setOpenNavBarMobile(false);
   };
+  // component will mount life-cycle check if the user is logged in else redirect to the login page
+  useEffect(() => {
+    if (!localStorage.getItem('token_user')) {
+      history.push('/auth/login');
+    }
+  }, []);
 
   return (
     <div className={classes.root}>

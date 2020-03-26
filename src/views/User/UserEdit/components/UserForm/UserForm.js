@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import {makeStyles} from '@material-ui/styles';
@@ -10,9 +10,7 @@ import {
   CardHeader,
   Grid,
   Divider,
-  Switch,
   TextField,
-  Typography,
   colors
 } from '@material-ui/core';
 
@@ -28,35 +26,9 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const UserForm = props => {
-  const {profile, className, ...rest} = props;
+  const {profile, handleSubmit, handleChange, className, ...rest} = props;
 
   const classes = useStyles();
-  const [values, setValues] = useState({
-    firstName: profile.firstName,
-    lastName: profile.lastName,
-    email: profile.email,
-    phone: profile.phone,
-    state: profile.state,
-    country: profile.country,
-    isPublic: profile.isPublic,
-    canHire: profile.canHire
-  });
-
-  const handleChange = event => {
-    event.persist();
-
-    setValues({
-      ...values,
-      [event.target.name]:
-        event.target.type === 'checkbox'
-          ? event.target.checked
-          : event.target.value
-    });
-  };
-
-  const handleSubmit = event => {
-    event.preventDefault();
-  };
 
   const roles = [{key: 'ROLE_TOKENIST', value: 'Tokenist'}, {key: 'ROLE_STAFF', value: 'Staff'}];
 
@@ -80,12 +52,12 @@ const UserForm = props => {
             >
               <TextField
                 fullWidth
-                helperText="Please specify the first name"
+                helperText="Please specify name"
                 label="Name"
-                name="firstName"
+                name="name"
                 onChange={handleChange}
                 required
-                value={values.firstName}
+                value={profile.name}
                 variant="outlined"
               />
             </Grid>
@@ -97,10 +69,11 @@ const UserForm = props => {
               <TextField
                 fullWidth
                 label="Username"
-                name="lastName"
+                name="username"
                 onChange={handleChange}
                 required
-                value={values.lastName}
+                value={profile.username}
+                disabled
                 variant="outlined"
               />
             </Grid>
@@ -115,7 +88,9 @@ const UserForm = props => {
                 name="email"
                 onChange={handleChange}
                 required
-                value={values.email}
+                disabled
+                type="email"
+                value={profile.email}
                 variant="outlined"
               />
             </Grid>
@@ -127,54 +102,23 @@ const UserForm = props => {
               <TextField
                 fullWidth
                 label="Select Role"
-                name="state"
+                name="role"
                 onChange={handleChange}
                 select
                 // eslint-disable-next-line react/jsx-sort-props
                 SelectProps={{native: true}}
-                value={values.state}
+                value={profile.role}
                 variant="outlined"
               >
                 {roles.map(role => (
                   <option
                     key={role.key}
-                    value={role.value}
+                    value={role.key}
                   >
                     {role.value}
                   </option>
                 ))}
               </TextField>
-            </Grid>
-            <Grid
-              item
-              md={6}
-              xs={12}
-            >
-              <TextField
-                fullWidth
-                label="Password"
-                name="phone"
-                onChange={handleChange}
-                type="password"
-                value={values.phone}
-                variant="outlined"
-              />
-            </Grid>
-            <Grid
-              item
-              md={6}
-              xs={12}
-            >
-              <TextField
-                fullWidth
-                label="Confirm Password"
-                name="country"
-                onChange={handleChange}
-                required
-                type="password"
-                value={values.country}
-                variant="outlined"
-              />
             </Grid>
           </Grid>
         </CardContent>
@@ -185,7 +129,7 @@ const UserForm = props => {
             type="submit"
             variant="contained"
           >
-            Submit
+            Save Changes
           </Button>
         </CardActions>
       </form>
@@ -195,7 +139,9 @@ const UserForm = props => {
 
 UserForm.propTypes = {
   className: PropTypes.string,
-  profile: PropTypes.object.isRequired
+  profile: PropTypes.object.isRequired,
+  handleChange: PropTypes.func.isRequired,
+  handleSubmit: PropTypes.func.isRequired
 };
 
 export default UserForm;

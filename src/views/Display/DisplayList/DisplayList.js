@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { makeStyles } from '@material-ui/styles';
-import { Page } from 'components';
-import { SearchBar } from './components';
-import { Header, DisplayTable } from './components';
+import React, {useState, useEffect} from 'react';
+import {makeStyles} from '@material-ui/styles';
+import {Page} from 'components';
+import {SearchBar} from './components';
+import {Header, DisplayTable} from './components';
 import {BASE_URL} from "../../../config";
+import {search} from "utils/functions";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -18,6 +19,7 @@ const DisplayList = () => {
   const classes = useStyles();
 
   const [displays, setDisplays] = useState([]);
+  const [filterDisplays, setFilterDisplays] = useState([]);
 
   useEffect(() => {
     let mounted = true;
@@ -28,6 +30,7 @@ const DisplayList = () => {
         .then(displays => {
           if (mounted) {
             setDisplays(displays);
+            setFilterDisplays(displays);
           }
         })
         .catch(error => console.log('error', error));
@@ -40,23 +43,24 @@ const DisplayList = () => {
     };
   }, []);
 
-  const handleFilter = () => {};
-  const handleSearch = () => {};
+  const handleSearch = (event) => {
+    const filter_array = search(displays, ['name'], event.target.value);
+    setFilterDisplays(filter_array);
+  };
 
   return (
     <Page
       className={classes.root}
       title="Customer Management List"
     >
-      <Header />
+      <Header/>
       <SearchBar
-        onFilter={handleFilter}
         onSearch={handleSearch}
       />
       {displays && (
         <DisplayTable
           className={classes.results}
-          displays={displays}
+          displays={filterDisplays}
         />
       )}
     </Page>

@@ -50,11 +50,6 @@ const routes = [
         path: '/token/waiting-list/:number',
         exact: true,
         component: lazy(() => import('views/Token/TokenWaitingList'))
-      },
-      {
-        path: '/token/next-queue-list',
-        exact: true,
-        component: lazy(() => import('views/Token/TokenNextList'))
       }
     ]
   },
@@ -273,14 +268,19 @@ const routes = [
         component: lazy(() => import('views/Token/TokenCall'))
       },
       {
-        path: '/counter/list',
+        path: '/served-report',
         exact: true,
-        component: lazy(() => import('views/Counter/CounterList'))
+        component: lazy(() => import('views/Report/ServedReportList'))
       },
       {
-        path: '/counter/edit/:id',
+        path: '/user-report',
         exact: true,
-        component: lazy(() => import('views/Counter/CounterEdit'))
+        component: lazy(() => import('views/Report/UserReportList'))
+      },
+      {
+        path: '/overall-report',
+        exact: true,
+        component: lazy(() => import('views/Report/OverallReportList'))
       },
       {
         path: '/projects/create',

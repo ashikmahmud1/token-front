@@ -97,7 +97,7 @@ const DepartmentTable = props => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {departments.slice(0, rowsPerPage).map(department => (
+                  {departments.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(department => (
                     <TableRow
                       hover
                       key={department.id}
