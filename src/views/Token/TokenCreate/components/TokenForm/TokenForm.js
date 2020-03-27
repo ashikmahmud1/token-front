@@ -16,6 +16,7 @@ import {
 } from '@material-ui/core';
 import {BASE_URL} from "../../../../../config";
 import SuccessSnackbar from '../SuccessSnackbar';
+import moment from 'moment';
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -33,6 +34,7 @@ const TokenForm = props => {
   const [customers, setCustomers] = useState([]);
   const [departments, setDepartments] = useState([]);
   const [openSnackbar, setOpenSnackbar] = useState(false);
+  const myRef = React.createRef();
 
   const classes = useStyles();
   const [values, setValues] = useState({
@@ -95,6 +97,30 @@ const TokenForm = props => {
 
   const onCreatedToken = (token) => {
     console.log(token);
+    // pop up the print option
+    myRef.current.innerHTML = `<div style=text-align:center>
+                                <h1>${token.token_number} //Token Number</h1>
+                                <h1>${token.customer.number} //Customer Number</h1>
+                                <span>${moment(token.updatedAt).format('MMMM Do YYYY, h:mm:ss a')} //created date</span>
+                              </div>`;
+    let contents = myRef.current.innerHTML;
+    let frame1 = document.createElement('iframe');
+    frame1.name = "frame1";
+    // frame1.style.position = "absolute";
+    frame1.style.top = "-1000000px";
+    document.body.appendChild(frame1);
+    let frameDoc = frame1.contentWindow ? frame1.contentWindow : frame1.contentDocument.document ? frame1.contentDocument.document : frame1.contentDocument;
+    frameDoc.document.open();
+    frameDoc.document.write('<html style=""><head><title>Token</title>');
+    frameDoc.document.write('</head><body>');
+    frameDoc.document.write(contents);
+    frameDoc.document.write('</body></html>');
+    frameDoc.document.close();
+    setTimeout(function () {
+      window.frames["frame1"].focus();
+      window.frames["frame1"].print();
+      document.body.removeChild(frame1);
+    }, 500);
     setOpenSnackbar(true);
   };
   const onChangeCustomer = (event, customer) => {
@@ -126,6 +152,8 @@ const TokenForm = props => {
       {...rest}
       className={clsx(classes.root, className)}
     >
+      {/*  Here add a hidden tag which will print when display */}
+      <div ref={myRef} style={{border: "1px dotted black; padding: 5px", display: "none"}}/>
       <form onSubmit={handleSubmit}>
         <CardHeader title="Token"/>
         <Divider/>

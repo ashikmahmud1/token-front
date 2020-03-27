@@ -106,16 +106,6 @@ const Login = () => {
           </Typography>
           <LoginForm className={classes.loginForm}/>
           <Divider className={classes.divider}/>
-          <Link
-            align="center"
-            color="secondary"
-            component={RouterLink}
-            to="/auth/register"
-            underline="always"
-            variant="subtitle2"
-          >
-            Don't have an account?
-          </Link>
         </CardContent>
         <CardMedia
           className={classes.media}

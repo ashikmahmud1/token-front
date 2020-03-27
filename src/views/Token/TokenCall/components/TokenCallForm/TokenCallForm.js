@@ -53,7 +53,7 @@ class CallForm extends Component {
       type: "type1",
       otherText: '',
       NOT_PRESENT: false
-    }
+    };
   }
 
   onChangeType = (event, option) => {

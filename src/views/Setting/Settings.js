@@ -35,7 +35,7 @@ const Settings = props => {
   return (
     <Page
       className={classes.root}
-      title="Settings"
+      title="Profile"
     >
       <Header />
       <Divider className={classes.divider} />

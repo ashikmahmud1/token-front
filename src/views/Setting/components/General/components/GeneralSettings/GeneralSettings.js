@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/styles';
+import {makeStyles} from '@material-ui/styles';
 import {
   Button,
   Card,
@@ -28,13 +28,14 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const GeneralSettings = props => {
-  const { profile, className, ...rest } = props;
+  const {profile, className, ...rest} = props;
 
   const classes = useStyles();
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [values, setValues] = useState({
     password: '',
-    confirmPassword: ''
+    confirmPassword: '',
+    oldPassword: ''
   });
 
   const handleChange = event => {
@@ -51,6 +52,8 @@ const GeneralSettings = props => {
 
   const handleSubmit = event => {
     event.preventDefault();
+    // here send the request for change password
+    console.log(values);
     setOpenSnackbar(true);
   };
 
@@ -64,8 +67,8 @@ const GeneralSettings = props => {
       className={clsx(classes.root, className)}
     >
       <form onSubmit={handleSubmit}>
-        <CardHeader title="Change Password" />
-        <Divider />
+        <CardHeader title="Change Password"/>
+        <Divider/>
         <CardContent>
           <Grid
             container
@@ -78,8 +81,7 @@ const GeneralSettings = props => {
             >
               <TextField
                 fullWidth
-                helperText="Please specify the first name"
-                label="Password"
+                label="New password"
                 name="password"
                 onChange={handleChange}
                 required
@@ -104,9 +106,25 @@ const GeneralSettings = props => {
                 variant="outlined"
               />
             </Grid>
+            <Grid
+              item
+              md={12}
+              xs={12}
+            >
+              <TextField
+                fullWidth
+                label="Old password"
+                name="oldPassword"
+                onChange={handleChange}
+                required
+                type="password"
+                value={values.oldPassword}
+                variant="outlined"
+              />
+            </Grid>
           </Grid>
         </CardContent>
-        <Divider />
+        <Divider/>
         <CardActions>
           <Button
             className={classes.saveButton}

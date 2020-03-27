@@ -25,11 +25,10 @@ import NotificationsIcon from '@material-ui/icons/NotificationsOutlined';
 import InputIcon from '@material-ui/icons/Input';
 import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
-
-import axios from 'utils/axios';
 import useRouter from 'utils/useRouter';
 import {PricingModal, NotificationsPopover} from 'components';
 import {logout} from 'actions';
+import {BASE_URL} from "../../../../config";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -102,21 +101,25 @@ const TopBar = props => {
   const [openSearchPopover, setOpenSearchPopover] = useState(false);
   const [searchValue, setSearchValue] = useState('');
   const [notifications, setNotifications] = useState([]);
+  const [displays, setDisplays] = useState([]);
   const [openNotifications, setOpenNotifications] = useState(false);
 
   useEffect(() => {
     let mounted = true;
 
     // here fetch all the displays
-    const fetchNotifications = () => {
-      axios.get('/api/account/notifications').then(response => {
-        if (mounted) {
-          setNotifications(response.data.notifications);
-        }
-      });
+    const fetchDisplays = () => {
+      fetch(BASE_URL + "/api/displays/")
+        .then(response => response.json())
+        .then(displays => {
+          if (mounted) {
+            setDisplays(displays);
+          }
+        })
+        .catch(error => console.log('error', error));
     };
 
-    fetchNotifications();
+    fetchDisplays();
 
     return () => {
       mounted = false;
@@ -128,7 +131,6 @@ const TopBar = props => {
       localStorage.removeItem('token_user');
     }
     history.push('/auth/login');
-    // dispatch(logout());
   };
 
   const handlePricingOpen = () => {
@@ -254,7 +256,7 @@ const TopBar = props => {
       />
       <NotificationsPopover
         anchorEl={notificationsRef.current}
-        notifications={notifications}
+        notifications={displays}
         onClose={handleNotificationsClose}
         open={openNotifications}
       />

@@ -18,21 +18,9 @@ const General = props => {
   const [profile, setProfile] = useState(null);
 
   useEffect(() => {
-    let mounted = true;
-
-    const fetchProfile = () => {
-      axios.get('/api/account/profile').then(response => {
-        if (mounted) {
-          setProfile(response.data.profile);
-        }
-      });
-    };
-
-    fetchProfile();
-
-    return () => {
-      mounted = false;
-    };
+    if (localStorage.getItem('token_user')){
+      setProfile(JSON.parse(localStorage.getItem('token_user')))
+    }
   }, []);
 
   if (!profile) {

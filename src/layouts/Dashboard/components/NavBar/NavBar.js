@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect } from 'react';
+import React, {Fragment, useEffect, useState} from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
@@ -46,14 +46,23 @@ const NavBar = props => {
   const classes = useStyles();
   const router = useRouter();
   const session = useSelector(state => state.session);
+  const [profile, setProfile] = useState(null);
+  const roles = {'ROLE_TOKENIST': 'Tokenist', 'ROLE_STAFF': 'Staff', 'ROLE_ADMIN': 'Admin'};
 
   useEffect(() => {
     if (openMobile) {
       onMobileClose && onMobileClose();
     }
+    if (localStorage.getItem('token_user')){
+      setProfile(JSON.parse(localStorage.getItem('token_user')))
+    }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router.location.pathname]);
+
+  if (!profile){
+    return null;
+  }
 
   const navbarContent = (
     <div className={classes.content}>
@@ -62,20 +71,22 @@ const NavBar = props => {
           alt="Person"
           className={classes.avatar}
           component={RouterLink}
-          src={session.user.avatar}
-          to="/profile/1/timeline"
+          src={profile.avatar}
+          to="/setting"
         />
         <Typography
           className={classes.name}
           variant="h4"
         >
-          {session.user.first_name} {session.user.last_name}
+          {profile.name}
         </Typography>
-        <Typography variant="body2">{session.user.bio}</Typography>
+        <Typography variant="body2">
+          {profile.roles[0] ? roles[profile.roles[0]]:''}
+        </Typography>
       </div>
       <Divider className={classes.divider} />
       <nav className={classes.navigation}>
-        {navigationConfig.map(list => (
+        { navigationConfig.map(list => (
           <Navigation
             component="div"
             key={list.title}

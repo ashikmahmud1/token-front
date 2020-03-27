@@ -36,6 +36,8 @@ const ProfileDetails = props => {
 
   const classes = useStyles();
 
+  const roles = {'ROLE_TOKENIST': 'Tokenist', 'ROLE_STAFF': 'Staff', 'ROLE_ADMIN': 'Admin'};
+
   return (
     <Card
       {...rest}
@@ -51,19 +53,13 @@ const ProfileDetails = props => {
           gutterBottom
           variant="h3"
         >
-          {profile.firstName} {profile.lastName}
+          {profile.name}
         </Typography>
         <Typography
           color="textSecondary"
           variant="body1"
         >
-          {profile.state}, {profile.country}
-        </Typography>
-        <Typography
-          color="textSecondary"
-          variant="body2"
-        >
-          {profile.timezone}
+          {roles[profile.roles[0]]}
         </Typography>
       </CardContent>
     </Card>

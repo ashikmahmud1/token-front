@@ -28,11 +28,6 @@ const routes = [
         component: lazy(() => import('views/Login'))
       },
       {
-        path: '/auth/register',
-        exact: true,
-        component: lazy(() => import('views/Register'))
-      },
-      {
         component: () => <Redirect to="/errors/error-404"/>
       }
     ]
@@ -234,6 +229,11 @@ const routes = [
         path: '/display/list',
         exact: true,
         component: lazy(() => import('views/Display/DisplayList'))
+      },
+      {
+        path: '/display/show',
+        exact: true,
+        component: lazy(() => import('views/Display/DisplayShow'))
       },
       {
         path: '/display/edit/:id',

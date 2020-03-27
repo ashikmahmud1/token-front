@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/styles';
-import { Typography } from '@material-ui/core';
+import { Grid, Typography, Button } from '@material-ui/core';
 
 const useStyles = makeStyles(() => ({
   root: {}
@@ -18,13 +18,21 @@ const Header = props => {
       {...rest}
       className={clsx(classes.root, className)}
     >
-      <Typography
-        component="h1"
-        gutterBottom
-        variant="h3"
+      <Grid
+        alignItems="flex-end"
+        container
+        justify="space-between"
+        spacing={3}
       >
-        Profile
-      </Typography>
+        <Grid item>
+          <Typography
+            component="h1"
+            variant="h3"
+          >
+            Displays
+          </Typography>
+        </Grid>
+      </Grid>
     </div>
   );
 };
