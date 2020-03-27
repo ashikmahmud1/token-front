@@ -17,6 +17,7 @@ import {
 import {BASE_URL} from "../../../../../config";
 import SuccessSnackbar from '../SuccessSnackbar';
 import moment from 'moment';
+import {addAuthorization} from "../../../../../utils/functions";
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -131,6 +132,7 @@ const TokenForm = props => {
     event.preventDefault();
     let myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
+    myHeaders = addAuthorization(myHeaders);
 
 
     let data = JSON.stringify(values);

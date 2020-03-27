@@ -7,6 +7,7 @@ import ChangePassword from "./components/ChangePassword";
 import SuccessSnackbar from "./components/SuccessSnackbar";
 import useRouter from 'utils/useRouter';
 import {BASE_URL} from "../../../config";
+import {addAuthorization} from "../../../utils/functions";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -55,6 +56,7 @@ const UserEdit = () => {
     event.preventDefault();
     let myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
+    myHeaders = addAuthorization(myHeaders);
 
     let raw = JSON.stringify({name: profile.name, role: [profile.role]});
 
@@ -76,6 +78,7 @@ const UserEdit = () => {
     if (profile.password === profile.confirmPassword) {
       let myHeaders = new Headers();
       myHeaders.append("Content-Type", "application/json");
+      myHeaders = addAuthorization(myHeaders);
 
       let raw = JSON.stringify({password: profile.password, confirmPassword: profile.confirmPassword});
 

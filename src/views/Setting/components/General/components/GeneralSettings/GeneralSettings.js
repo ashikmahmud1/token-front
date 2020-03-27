@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import {makeStyles} from '@material-ui/styles';
@@ -15,6 +15,8 @@ import {
 } from '@material-ui/core';
 
 import SuccessSnackbar from '../SuccessSnackbar';
+import {BASE_URL} from "../../../../../../config";
+import {addAuthorization} from "../../../../../../utils/functions";
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -32,6 +34,7 @@ const GeneralSettings = props => {
 
   const classes = useStyles();
   const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [tokenUser, setTokenUser] = useState({});
   const [values, setValues] = useState({
     password: '',
     confirmPassword: '',
@@ -53,6 +56,34 @@ const GeneralSettings = props => {
   const handleSubmit = event => {
     event.preventDefault();
     // here send the request for change password
+    if (values.password === values.confirmPassword) {
+      let myHeaders = new Headers();
+      myHeaders.append("Content-Type", "application/json");
+      myHeaders = addAuthorization(myHeaders);
+      let raw = JSON.stringify({
+        password: values.password,
+        confirmPassword: values.confirmPassword,
+        oldPassword: values.oldPassword
+      });
+
+      let requestOptions = {
+        method: 'PUT',
+        headers: myHeaders,
+        body: raw
+      };
+
+      fetch(BASE_URL + "/api/users/reset-password/" + tokenUser.id, requestOptions)
+        .then(response => response.json())
+        .then(result => {
+          setOpenSnackbar(true);
+          // update the token user
+          localStorage.setItem('token_user', JSON.stringify(result));
+          setValues({...values, password: '', confirmPassword: '', oldPassword: ''});
+        })
+        .catch(error => console.log('error', error));
+    } else {
+      alert('password and confirm password should be same.')
+    }
     console.log(values);
     setOpenSnackbar(true);
   };
@@ -60,6 +91,12 @@ const GeneralSettings = props => {
   const handleSnackbarClose = () => {
     setOpenSnackbar(false);
   };
+
+  useEffect(() => {
+    if (localStorage.getItem('token_user')) {
+      setTokenUser(JSON.parse(localStorage.getItem('token_user')))
+    }
+  }, []);
 
   return (
     <Card

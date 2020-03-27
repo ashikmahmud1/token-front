@@ -15,6 +15,7 @@ import {BASE_URL} from "../../../../../config";
 import TokenInfo from "../TokenInfo";
 import useRouter from 'utils/useRouter';
 import SocketConnection from "../../../../../components/SocketConnection";
+import {addAuthorization} from "../../../../../utils/functions";
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -115,17 +116,20 @@ class CallForm extends Component {
     if (localStorage.getItem('token_user')) {
       this.setState({token_user: JSON.parse(localStorage.getItem('token_user'))});
     }
+    if (localStorage.getItem('current_call')) {
+      this.setState({current_call: JSON.parse(localStorage.getItem('current_call'))});
+    }
     fetch(BASE_URL + "/api/counters/")
       .then(response => response.json())
       .then(counters => {
-        this.setState({...this.state, counters, counter_id: department_counter.counter_id});
+        this.setState({ counters, counter_id: department_counter.counter_id});
       })
       .catch(error => console.log('error', error));
 
     fetch(BASE_URL + "/api/departments/")
       .then(response => response.json())
       .then(departments => {
-        this.setState({...this.state, departments, department_id: department_counter.department_id});
+        this.setState({ departments, department_id: department_counter.department_id});
       })
       .catch(error => console.log('error', error));
   }
@@ -151,6 +155,7 @@ class CallForm extends Component {
   updateToken = (token, data) => {
     let myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
+    myHeaders = addAuthorization(myHeaders);
 
     let raw = JSON.stringify(data);
 
@@ -226,6 +231,7 @@ class CallForm extends Component {
             }).then(response => response.json())
               .then(result => {
                 console.log(result);
+                localStorage.setItem('current_call', JSON.stringify(next_call));
                 this.setState({...this.state, current_call: next_call});
               });
           } else {
@@ -242,6 +248,7 @@ class CallForm extends Component {
         }).then(response => response.json())
           .then(result => {
             console.log(result);
+            localStorage.setItem('current_call', JSON.stringify(next_call));
             this.setState({...this.state, current_call: next_call});
           });
       }

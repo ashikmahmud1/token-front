@@ -6,6 +6,7 @@ import DepartmentForm from "./components/DepartmentForm";
 import useRouter from 'utils/useRouter';
 import {BASE_URL} from "../../../config";
 import SuccessSnackbar from "./components/SuccessSnackbar";
+import {addAuthorization} from "../../../utils/functions";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -61,7 +62,7 @@ const DepartmentEdit = () => {
     event.preventDefault();
     let myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
-
+    myHeaders = addAuthorization(myHeaders);
 
     let data = JSON.stringify(profile);
 

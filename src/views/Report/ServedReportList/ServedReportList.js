@@ -5,6 +5,7 @@ import {Page} from 'components';
 import {Header} from './components';
 import {BASE_URL} from "../../../config";
 import ServedReportTable from "./components/ServedReportTable";
+import {addAuthorization} from "../../../utils/functions";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -27,6 +28,7 @@ const ServedReportList = () => {
       // post request
       let myHeaders = new Headers();
       myHeaders.append("Content-Type", "application/json");
+      myHeaders = addAuthorization(myHeaders);
       let data = JSON.stringify({});
 
       let requestOptions = {

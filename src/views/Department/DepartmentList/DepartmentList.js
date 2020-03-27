@@ -7,6 +7,7 @@ import {Header, DepartmentTable} from './components';
 import {BASE_URL} from "../../../config";
 import SocketConnection from "../../../components/SocketConnection";
 import {search} from "utils/functions";
+import {addAuthorization} from "../../../utils/functions";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -111,6 +112,7 @@ const DepartmentList = () => {
     if (window.confirm("Are you sure to reset?")) {
       let myHeaders = new Headers();
       myHeaders.append("Content-Type", "application/json");
+      myHeaders = addAuthorization(myHeaders);
 
       let tokens = departmentTokens[id].tokens || [];
       tokens.forEach(token => {

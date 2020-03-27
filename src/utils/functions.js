@@ -14,3 +14,11 @@ export function search(arr = [], keys = [], value='') {
   }, {});
   return new_arr;
 }
+
+export function addAuthorization(headers) {
+  if (localStorage.getItem('token_user')){
+    let token_user = JSON.parse(localStorage.getItem('token_user'));
+    headers.append("Authorization", `${token_user.tokenType} ${token_user.accessToken}`);
+  }
+  return headers
+}

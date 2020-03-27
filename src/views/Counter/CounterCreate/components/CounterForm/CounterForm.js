@@ -16,6 +16,7 @@ import {
 import {BASE_URL} from "../../../../../config";
 import useRouter from 'utils/useRouter';
 import SuccessSnackbar from '../SuccessSnackbar';
+import {addAuthorization} from "../../../../../utils/functions";
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -66,6 +67,7 @@ const CounterForm = props => {
     event.preventDefault();
     let myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
+    myHeaders = addAuthorization(myHeaders);
 
     let data = JSON.stringify(values);
 

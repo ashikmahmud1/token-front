@@ -6,6 +6,7 @@ import CounterForm from "./components/CounterForm";
 import {BASE_URL} from "../../../config";
 import SuccessSnackbar from "./components/SuccessSnackbar";
 import useRouter from 'utils/useRouter';
+import {addAuthorization} from "../../../utils/functions";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -56,7 +57,7 @@ const CounterEdit = () => {
     event.preventDefault();
     let myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
-
+    myHeaders = addAuthorization(myHeaders);
     let data = JSON.stringify(profile);
 
     let requestOptions = {
