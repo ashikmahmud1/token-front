@@ -118,6 +118,22 @@ const GeneralSettings = props => {
             >
               <TextField
                 fullWidth
+                label="Old password"
+                name="oldPassword"
+                onChange={handleChange}
+                required
+                type="password"
+                value={values.oldPassword}
+                variant="outlined"
+              />
+            </Grid>
+            <Grid
+              item
+              md={12}
+              xs={12}
+            >
+              <TextField
+                fullWidth
                 label="New password"
                 name="password"
                 onChange={handleChange}
@@ -140,22 +156,6 @@ const GeneralSettings = props => {
                 required
                 type="password"
                 value={values.confirmPassword}
-                variant="outlined"
-              />
-            </Grid>
-            <Grid
-              item
-              md={12}
-              xs={12}
-            >
-              <TextField
-                fullWidth
-                label="Old password"
-                name="oldPassword"
-                onChange={handleChange}
-                required
-                type="password"
-                value={values.oldPassword}
                 variant="outlined"
               />
             </Grid>

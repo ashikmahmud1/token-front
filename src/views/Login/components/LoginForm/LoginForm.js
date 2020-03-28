@@ -97,8 +97,11 @@ const LoginForm = props => {
     fetch(BASE_URL + "/api/auth/signin", requestOptions)
       .then(response => response.json())
       .then(result => {
-        localStorage.setItem('token_user', JSON.stringify(result));
-        history.push('/');
+        console.log(result);
+        if (!result.status){
+          localStorage.setItem('token_user', JSON.stringify(result));
+          history.push('/');
+        }
       })
       .catch(error => console.log('error', error));
   };

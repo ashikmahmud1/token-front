@@ -100,9 +100,10 @@ const TokenForm = props => {
     console.log(token);
     // pop up the print option
     myRef.current.innerHTML = `<div style=text-align:center>
-                                <h1>${token.token_number} //Token Number</h1>
-                                <h1>${token.customer.number} //Customer Number</h1>
-                                <span>${moment(token.updatedAt).format('MMMM Do YYYY, h:mm:ss a')} //created date</span>
+                                <h2>Department Name : ${token.department.name}</h2>
+                                <h1>Token Number : ${token.token_number} ${token.priority ? '(P)' : ''}</h1>
+                                <h4>Customer Number : ${token.customer.number}</h4>
+                                <span>${moment(token.updatedAt).format('MMMM Do YYYY, h:mm:ss a')}</span>
                               </div>`;
     let contents = myRef.current.innerHTML;
     let frame1 = document.createElement('iframe');
