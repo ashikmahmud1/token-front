@@ -21,7 +21,7 @@ const Header = props => {
       <Grid
         alignItems="flex-end"
         container
-        justify="space-between"
+        justify="center"
         spacing={3}
       >
         <Grid item>
@@ -29,7 +29,7 @@ const Header = props => {
             component="h1"
             variant="h3"
           >
-            Departments
+            Tokens
           </Typography>
         </Grid>
       </Grid>

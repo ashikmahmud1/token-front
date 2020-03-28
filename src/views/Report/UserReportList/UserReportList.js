@@ -4,6 +4,9 @@ import {makeStyles} from '@material-ui/styles';
 import {Page} from 'components';
 import {Header, DepartmentTable} from './components';
 import {BASE_URL} from "../../../config";
+import TextField from "@material-ui/core/TextField";
+import {Button} from "@material-ui/core";
+import {msToTime} from "../../../utils/functions";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -11,6 +14,10 @@ const useStyles = makeStyles(theme => ({
   },
   results: {
     marginTop: theme.spacing(3)
+  },
+  saveButton: {
+    marginTop: 10,
+    marginLeft: 10
   }
 }));
 
@@ -18,6 +25,9 @@ const UserReportList = () => {
   const classes = useStyles();
 
   const [reportData, setReportData] = useState([]);
+  const [data, setData] = useState({});
+  const [fromDate, setFromDate] = useState('');
+  const [toDate, setToDate] = useState('');
 
 
   const generateUserReport = (data) => {
@@ -31,18 +41,25 @@ const UserReportList = () => {
     data.users.forEach(user => {
       // filter the tokens by the user
       let user_tokens = data.tokens.filter(t => t.user.id === user.id);
-      let total_served_time = 0;
+      let total_check_up = 0;
+      let milliseconds = 0;
       user_tokens.forEach(token => {
         // subtract the serving start and serving end time
-        let dif = (new Date(token.serving_end) - new Date(token.serving_start));
-        let min = dif / 60000;
-        total_served_time = total_served_time + min;
+        // check if the token createdAt is greater than fromDate and createdAt is less than toDate
+        let is_greater = fromDate !== '' ? new Date(token.createdAt) >= new Date(fromDate) : true;
+        let is_less = toDate !== '' ? new Date(token.createdAt) <= new Date(toDate) : true;
+        if (is_greater && is_less) {
+          let dif = (new Date(token.serving_end) - new Date(token.serving_start)); // milliseconds
+          milliseconds = milliseconds + dif;
+          total_check_up++;
+        }
       });
+      let minutes = (milliseconds / 60000).toFixed(2);
       report_data.push({
         username: user.username,
-        total_served_time: total_served_time.toFixed(2),
-        total_check_up: user_tokens.length,
-        points: (total_served_time * user_tokens.length).toFixed(2)
+        total_served_time: msToTime(milliseconds),
+        total_check_up: total_check_up,
+        points: (minutes * total_check_up).toFixed(2)
       });
     });
     setReportData(report_data);
@@ -56,6 +73,7 @@ const UserReportList = () => {
         .then(report => {
           if (mounted) {
             generateUserReport(report);
+            setData(report);
           }
         })
         .catch(error => console.log('error', error));
@@ -72,9 +90,41 @@ const UserReportList = () => {
   return (
     <Page
       className={classes.root}
-      title="Department Management List"
+      title="User Report"
     >
       <Header/>
+      <TextField
+        id="date"
+        label="From Date"
+        type="date"
+        value={fromDate}
+        className={classes.textField}
+        onChange={event => setFromDate(event.target.value)}
+        InputLabelProps={{
+          shrink: true,
+        }}
+      />
+      <TextField
+        id="date"
+        label="To Date"
+        type="date"
+        value={toDate}
+        style={{marginLeft: 20}}
+        className={classes.textField}
+        onChange={event => setToDate(event.target.value)}
+        InputLabelProps={{
+          shrink: true,
+        }}
+      />
+      <Button
+        className={classes.saveButton}
+        onClick={() => generateUserReport(data)}
+        color='primary'
+        type="submit"
+        variant="contained"
+      >
+        GO
+      </Button>
       {reportData.length > 0 && (
         <DepartmentTable
           className={classes.results}

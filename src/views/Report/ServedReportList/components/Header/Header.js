@@ -21,7 +21,7 @@ const Header = props => {
       <Grid
         alignItems="flex-end"
         container
-        justify="space-between"
+        justify="center"
         spacing={3}
       >
         <Grid item>

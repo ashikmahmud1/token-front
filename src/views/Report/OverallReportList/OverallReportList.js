@@ -2,10 +2,10 @@ import React, {useState, useEffect} from 'react';
 import {makeStyles} from '@material-ui/styles';
 
 import {Page} from 'components';
-import {SearchBar} from './components';
 import {Header, DepartmentTable} from './components';
 import {BASE_URL} from "../../../config";
-import {search} from "utils/functions";
+import TextField from "@material-ui/core/TextField";
+import {Button} from "@material-ui/core";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -13,112 +13,97 @@ const useStyles = makeStyles(theme => ({
   },
   results: {
     marginTop: theme.spacing(3)
+  },
+  saveButton: {
+    marginTop: 10,
+    marginLeft: 10
   }
 }));
 
 const OverallReportList = () => {
   const classes = useStyles();
-
-  const [departments, setDepartments] = useState([]);
-  const [filterDepartments, setFilterDepartments] = useState([]);
-  const [departmentTokens, setDepartmentTokens] = useState({});
+  const [tokens, setTokens] = useState([]);
+  const [filterTokens, setFilterTokens] = useState([]);
+  const [fromDate, setFromDate] = useState('');
+  const [toDate, setToDate] = useState('');
 
   useEffect(() => {
     let mounted = true;
 
     // get all the tokens
-    const fetchDepartments = () => {
-      fetch(BASE_URL + "/api/departments/")
+    const fetchTokens = () => {
+      fetch(BASE_URL + "/api/tokens/")
         .then(response => response.json())
-        .then(departments => {
+        .then(tokens => {
           if (mounted) {
-            setDepartments(departments);
-            setFilterDepartments(departments);
+            setTokens(tokens);
+            setFilterTokens(tokens);
           }
         })
         .catch(error => console.log('error', error));
     };
 
-    fetchDepartments();
+    fetchTokens();
 
     return () => {
       mounted = false;
     };
   }, []);
 
-  const handleSearch = (event) => {
-    const filter_array = search(departments, ['name', 'letter'], event.target.value);
-    setFilterDepartments(filter_array);
-  };
-
-  const filterDepartment = id => {
-    let filter_departments = departments.filter(d => parseInt(d.id) !== parseInt(id));
-    setDepartments(filter_departments);
-    setFilterDepartments(filter_departments);
-  };
-  const deleteDepartment = id => {
-    let requestOptions = {
-      method: 'DELETE'
-    };
-
-    if (window.confirm("Are you sure to delete?")) {
-      fetch(BASE_URL + "/api/departments/" + id, requestOptions)
-        .then(response => response.json())
-        .then(result => filterDepartment(id))
-        .catch(error => console.log('error', error));
+  const filter = () => {
+    // check if fromDate is '' or not
+    let filter_tokens = [...tokens];
+    if (fromDate !== '') {
+      filter_tokens = tokens.filter(t => new Date(t.createdAt) >= new Date(fromDate));
     }
-  };
-
-  const setResetDepartment = department => {
-    let new_departments = [...departments];
-    let reset_department_index = departments.findIndex(d => d.id === department.id);
-    if (reset_department_index !== -1) {
-      new_departments[reset_department_index] = department;
-      setDepartments(new_departments);
-      setFilterDepartments(new_departments);
+    if (toDate !== ''){
+      filter_tokens = tokens.filter(t => new Date(t.createdAt) <= new Date(toDate));
     }
-  };
-  const resetDepartment = id => {
-    if (window.confirm("Are you sure to reset?")) {
-      let myHeaders = new Headers();
-      myHeaders.append("Content-Type", "application/json");
-
-      let tokens = departmentTokens[id].tokens || [];
-      tokens.forEach(token => {
-        token.serving_end = token.status === 'TOKEN_CALLED' ? new Date() : token.serving_end;
-        token.status = token.status === 'TOKEN_CALLED' ? 'TOKEN_SERVED' : 'TOKEN_NOT_CAME';
-      });
-
-      let data = JSON.stringify({tokens});
-
-      let requestOptions = {
-        method: 'PUT',
-        headers: myHeaders,
-        body: data
-      };
-
-      fetch(BASE_URL + "/api/departments/reset/" + id, requestOptions)
-        .then(response => response.json())
-        .then(result => setResetDepartment(result))
-        .catch(error => console.log('error', error));
-    }
+    setFilterTokens(filter_tokens);
   };
 
   return (
     <Page
       className={classes.root}
-      title="Department Management List"
+      title="Overall Report"
     >
       <Header/>
-      <SearchBar
-        onSearch={handleSearch}
+      <TextField
+        id="date"
+        label="From Date"
+        type="date"
+        value={fromDate}
+        className={classes.textField}
+        onChange={event => setFromDate(event.target.value)}
+        InputLabelProps={{
+          shrink: true,
+        }}
       />
-      {departments.length > 0 && (
+      <TextField
+        id="date"
+        label="To Date"
+        type="date"
+        value={toDate}
+        style={{marginLeft: 20}}
+        className={classes.textField}
+        onChange={event => setToDate(event.target.value)}
+        InputLabelProps={{
+          shrink: true,
+        }}
+      />
+      <Button
+        className={classes.saveButton}
+        onClick={() => filter()}
+        color='primary'
+        type="submit"
+        variant="contained"
+      >
+        GO
+      </Button>
+      {tokens.length > 0 && (
         <DepartmentTable
-          deleteDepartment={deleteDepartment}
-          resetDepartment={resetDepartment}
           className={classes.results}
-          departments={filterDepartments}
+          tokens={filterTokens}
         />
       )}
     </Page>

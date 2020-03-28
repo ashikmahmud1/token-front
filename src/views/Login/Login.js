@@ -7,7 +7,6 @@ import {
   CardMedia,
   Typography,
   Divider,
-  Link,
   Avatar
 } from '@material-ui/core';
 import LockIcon from '@material-ui/icons/Lock';

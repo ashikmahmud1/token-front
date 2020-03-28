@@ -185,6 +185,7 @@ class CallForm extends Component {
         status: "TOKEN_SERVED",
         serving_end: new Date()
       }).then(res => {
+        localStorage.setItem('current_call', JSON.stringify({department: null, token: null, counter: null}));
         console.log('stopping...');
         this.setState({...this.state, current_call: {department: null, token: null, counter: null}});
       })
@@ -232,10 +233,11 @@ class CallForm extends Component {
               .then(result => {
                 console.log(result);
                 localStorage.setItem('current_call', JSON.stringify(next_call));
-                this.setState({...this.state, current_call: next_call});
+                this.setState({ current_call: next_call});
               });
           } else {
-            this.setState({...this.state, current_call: {department: null, token: null, counter: null}});
+            localStorage.setItem('current_call', JSON.stringify({department: null, token: null, counter: null}));
+            this.setState({ current_call: {department: null, token: null, counter: null}});
           }
         })
     } else {
@@ -249,7 +251,7 @@ class CallForm extends Component {
           .then(result => {
             console.log(result);
             localStorage.setItem('current_call', JSON.stringify(next_call));
-            this.setState({...this.state, current_call: next_call});
+            this.setState({ current_call: next_call});
           });
       }
     }

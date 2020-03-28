@@ -1,5 +1,4 @@
 import React, {useState} from 'react';
-import {Link as RouterLink} from 'react-router-dom';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import PerfectScrollbar from 'react-perfect-scrollbar';
@@ -10,8 +9,6 @@ import {
   CardContent,
   CardHeader,
   Divider,
-  Button,
-  Link,
   Table,
   TableBody,
   TableCell,
@@ -21,7 +18,9 @@ import {
   Typography
 } from '@material-ui/core';
 
-import {GenericMoreButton, TableEditBar} from 'components';
+import {GenericMoreButton} from 'components';
+import moment from "moment";
+import {msToTime} from "../../../../../utils/functions";
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -47,11 +46,9 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const OverallReportTable = props => {
-  const {className, departments, deleteDepartment, resetDepartment, ...rest} = props;
+  const {className, tokens, ...rest} = props;
 
   const classes = useStyles();
-
-  const [selectedDepartments] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
@@ -74,13 +71,13 @@ const OverallReportTable = props => {
         gutterBottom
         variant="body2"
       >
-        {departments.length} Records found. Page {page + 1} of{' '}
-        {Math.ceil(departments.length / rowsPerPage)}
+        {tokens.length} Records found. Page {page + 1} of{' '}
+        {Math.ceil(tokens.length / rowsPerPage)}
       </Typography>
       <Card>
         <CardHeader
           action={<GenericMoreButton/>}
-          title="All users"
+          title="All Tokens"
         />
         <Divider/>
         <CardContent className={classes.content}>
@@ -89,74 +86,36 @@ const OverallReportTable = props => {
               <Table>
                 <TableHead>
                   <TableRow>
-                    <TableCell>Name</TableCell>
-                    <TableCell>Letter</TableCell>
-                    <TableCell>Start Number</TableCell>
-                    <TableCell>Color</TableCell>
-                    <TableCell align="center">Actions</TableCell>
+                    <TableCell>#</TableCell>
+                    <TableCell>User</TableCell>
+                    <TableCell>Customer</TableCell>
+                    <TableCell>Number</TableCell>
+                    <TableCell>Department</TableCell>
+                    <TableCell>Counter</TableCell>
+                    <TableCell>Type</TableCell>
+                    <TableCell>Date</TableCell>
+                    <TableCell>Serving Start</TableCell>
+                    <TableCell>Serving End</TableCell>
+                    <TableCell>Served Time</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {departments.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(department => (
+                  {tokens.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((token, index) => (
                     <TableRow
                       hover
-                      key={department.id}
-                      selected={selectedDepartments.indexOf(department.id) !== -1}
+                      key={token.id}
                     >
-                      <TableCell>
-                        <div className={classes.nameCell}>
-                          <div>
-                            <Link
-                              color="inherit"
-                              component={RouterLink}
-                              to={"/department/edit/" + department.id}
-                              variant="h6"
-                            >
-                              {department.name}
-                            </Link>
-                          </div>
-                        </div>
-                      </TableCell>
-                      <TableCell>{department.letter}</TableCell>
-                      <TableCell>
-                        {department.start_number}
-                      </TableCell>
-                      <TableCell>
-                        <div style={{
-                          width: 20,
-                          height: 20,
-                          borderRadius: 20,
-                          backgroundColor: department.color,
-                        }}/>
-                      </TableCell>
-                      <TableCell align="center">
-                        <Button
-                          color="primary"
-                          component={RouterLink}
-                          size="small"
-                          to={"/department/edit/" + department.id}
-                          variant="outlined"
-                        >
-                          Edit
-                        </Button>
-                        <Button
-                          style={{color: '#e53935', marginLeft: 10}}
-                          size="small"
-                          onClick={() => deleteDepartment(department.id)}
-                          variant="outlined"
-                        >
-                          Delete
-                        </Button>
-                        <Button
-                          style={{marginLeft: 10}}
-                          color="primary"
-                          size="small"
-                          onClick={() => resetDepartment(department.id)}
-                          variant="outlined"
-                        >
-                          Reset
-                        </Button>
-                      </TableCell>
+                      <TableCell>{index + 1}</TableCell>
+                      <TableCell>{token.user ? token.user.name:''}</TableCell>
+                      <TableCell>{token.customer ? token.customer.name:''}</TableCell>
+                      <TableCell>{token.token_number}</TableCell>
+                      <TableCell>{token.department.letter}</TableCell>
+                      <TableCell>{token.counter ? token.counter.letter:''}</TableCell>
+                      <TableCell>{token.type}</TableCell>
+                      <TableCell>{token.createdAt}</TableCell>
+                      <TableCell>{token.serving_start ? moment(token.serving_start).format('LTS'):''}</TableCell>
+                      <TableCell>{token.serving_end ? moment(token.serving_end).format('LTS'):''}</TableCell>
+                      <TableCell>{token.status === 'TOKEN_SERVED' ? msToTime(new Date(token.serving_end) - new Date(token.serving_start)) :''}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -167,7 +126,7 @@ const OverallReportTable = props => {
         <CardActions className={classes.actions}>
           <TablePagination
             component="div"
-            count={departments.length}
+            count={tokens.length}
             onChangePage={handleChangePage}
             onChangeRowsPerPage={handleChangeRowsPerPage}
             page={page}
@@ -176,20 +135,17 @@ const OverallReportTable = props => {
           />
         </CardActions>
       </Card>
-      <TableEditBar selected={selectedDepartments}/>
     </div>
   );
 };
 
 OverallReportTable.propTypes = {
   className: PropTypes.string,
-  departments: PropTypes.array.isRequired,
-  deleteDepartment: PropTypes.func.isRequired,
-  resetDepartment: PropTypes.func.isRequired
+  tokens: PropTypes.array.isRequired,
 };
 
 OverallReportTable.defaultProps = {
-  departments: []
+  tokens: []
 };
 
 export default OverallReportTable;
