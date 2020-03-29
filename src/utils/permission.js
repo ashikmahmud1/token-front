@@ -27,6 +27,7 @@ const permissions = {
   "display_create": {ROLE_ADMIN: true, ROLE_STAFF: false, ROLE_TOKENIST: true},
   "display_list": {ROLE_ADMIN: true, ROLE_STAFF: false, ROLE_TOKENIST: true},
   "display_edit": {ROLE_ADMIN: true, ROLE_STAFF: false, ROLE_TOKENIST: true},
+  "display_show": {ROLE_ADMIN: false, ROLE_STAFF: true, ROLE_TOKENIST: false},
 
   //DEPARTMENT PERMISSIONS
   "department_create": {ROLE_ADMIN: true, ROLE_STAFF: false, ROLE_TOKENIST: false},
@@ -37,9 +38,12 @@ const permissions = {
 export function checkPermission(pathname) {
   // first split the pathname
   const split_path = pathname.split('/');
-  const join_path = split_path[1]+'_'+split_path[2];
-  const token_user = JSON.parse(localStorage.getItem('token_user'));
+  if (split_path.length > 2){
+    const join_path = split_path[1]+'_'+split_path[2];
+    const token_user = JSON.parse(localStorage.getItem('token_user'));
 
-  return permissions[join_path][token_user.roles[0]];
+    return permissions[join_path][token_user.roles[0]];
+  }
+  return true;
 
 }
