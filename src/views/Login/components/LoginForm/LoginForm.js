@@ -8,8 +8,8 @@ import {makeStyles} from '@material-ui/styles';
 import {Button, TextField} from '@material-ui/core';
 
 import useRouter from 'utils/useRouter';
-import {login} from 'actions';
 import {BASE_URL} from "../../../../config";
+import ErrorSnackbar from "../ErrorSnackbar";
 
 const schema = {
   username: {
@@ -43,6 +43,12 @@ const LoginForm = props => {
   const classes = useStyles();
   const {history} = useRouter();
   const dispatch = useDispatch();
+  const [openError, setOpenError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+
+  const handleErrorClose = () => {
+    setOpenError(false);
+  };
 
   const [formState, setFormState] = useState({
     isValid: false,
@@ -101,6 +107,9 @@ const LoginForm = props => {
         if (!result.status){
           localStorage.setItem('token_user', JSON.stringify(result));
           history.push('/');
+        } else {
+          setOpenError(true);
+          setErrorMessage('Incorrect username or password');
         }
       })
       .catch(error => console.log('error', error));
@@ -150,6 +159,10 @@ const LoginForm = props => {
       >
         Sign in
       </Button>
+      <ErrorSnackbar
+        message={errorMessage}
+        onClose={handleErrorClose}
+        open={openError}/>
     </form>
   );
 };

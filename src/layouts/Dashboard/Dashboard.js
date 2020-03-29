@@ -5,6 +5,7 @@ import {makeStyles} from '@material-ui/styles';
 import {LinearProgress} from '@material-ui/core';
 import {NavBar, TopBar} from './components';
 import useRouter from 'utils/useRouter';
+import {checkPermission} from "../../utils/permission";
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -49,12 +50,13 @@ const Dashboard = props => {
   const handleNavBarMobileClose = () => {
     setOpenNavBarMobile(false);
   };
-  // component will mount life-cycle check if the user is logged in else redirect to the login page
-  useEffect(() => {
-    if (!localStorage.getItem('token_user')) {
-      history.push('/auth/login');
-    }
-  }, []);
+  if (!localStorage.getItem('token_user')) {
+    history.push('/auth/login');
+  }
+
+  if(!checkPermission(history.location.pathname)){
+    history.goBack();
+  }
 
   return (
     <div className={classes.root}>

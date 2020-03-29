@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/styles';
-import { Snackbar, SnackbarContent, colors } from '@material-ui/core';
-import CheckCircleIcon from '@material-ui/icons/CheckCircleOutlined';
+import {makeStyles} from '@material-ui/styles';
+import {Snackbar, SnackbarContent, colors} from '@material-ui/core';
+import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
 
 const useStyles = makeStyles(theme => ({
   content: {
-    backgroundColor: colors.green[600]
+    backgroundColor: colors.red[600]
   },
   message: {
     display: 'flex',
@@ -17,8 +17,8 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const SuccessSnackbar = props => {
-  const { open, onClose } = props;
+const ErrorSnackbar = props => {
+  const {open, onClose, message} = props;
 
   const classes = useStyles();
 
@@ -36,8 +36,8 @@ const SuccessSnackbar = props => {
         className={classes.content}
         message={
           <span className={classes.message}>
-            <CheckCircleIcon className={classes.icon} />
-            Successfully saved changes!
+            <ErrorOutlineIcon className={classes.icon}/>
+            {message}
           </span>
         }
         variant="h6"
@@ -46,14 +46,17 @@ const SuccessSnackbar = props => {
   );
 };
 
-SuccessSnackbar.propTypes = {
+ErrorSnackbar.propTypes = {
   onClose: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
+  message: PropTypes.string.isRequired
 };
 
-SuccessSnackbar.defaultProps = {
+ErrorSnackbar.defaultProps = {
   open: true,
-  onClose: () => {}
+  message: '',
+  onClose: () => {
+  }
 };
 
-export default SuccessSnackbar;
+export default ErrorSnackbar;

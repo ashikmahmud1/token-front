@@ -6,6 +6,8 @@ import {SearchBar} from './components';
 import {Header, UserTable} from './components';
 import {BASE_URL} from "../../../config";
 import {search} from "utils/functions";
+import {addAuthorization} from "../../../utils/functions";
+
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -26,12 +28,22 @@ const UserList = () => {
     let mounted = true;
 
     const fetchUsers = () => {
-      fetch(BASE_URL + "/api/users/")
+      let myHeaders = new Headers();
+      myHeaders.append("Content-Type", "application/json");
+      myHeaders = addAuthorization(myHeaders);
+
+      let requestOptions = {
+        method: 'GET',
+        headers: myHeaders
+      };
+      fetch(BASE_URL + "/api/users/", requestOptions)
         .then(response => response.json())
         .then(users => {
           if (mounted) {
-            setUsers(users);
-            setFilterUsers(users);
+            if (!users.status){
+              setUsers(users);
+              setFilterUsers(users);
+            }
           }
         })
         .catch(error => console.log('error', error));

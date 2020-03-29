@@ -18,6 +18,7 @@ import {BASE_URL} from "../../../../../config";
 import SuccessSnackbar from '../SuccessSnackbar';
 import moment from 'moment';
 import {addAuthorization} from "../../../../../utils/functions";
+import ErrorSnackbar from "../ErrorSnackbar";
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -35,7 +36,15 @@ const TokenForm = props => {
   const [customers, setCustomers] = useState([]);
   const [departments, setDepartments] = useState([]);
   const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [openError, setOpenError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
   const myRef = React.createRef();
+  const errors = {
+    403: "you don't have permission",
+    401: "Unauthorized",
+    404: "Not found",
+    500: "Internal server error"
+  };
 
   const classes = useStyles();
   const [values, setValues] = useState({
@@ -44,6 +53,10 @@ const TokenForm = props => {
     priority: false,
     status: "TOKEN_CREATED"
   });
+
+  const handleErrorClose = () => {
+    setOpenError(false);
+  };
 
 
   // Here load the customer by customer number
@@ -146,7 +159,14 @@ const TokenForm = props => {
 
     fetch(BASE_URL + "/api/tokens/", requestOptions)
       .then(response => response.json())
-      .then(result => onCreatedToken(result))
+      .then(result => {
+        if (!result.message) {
+          onCreatedToken(result)
+        } else {
+          setOpenError(true);
+          setErrorMessage(errors[result.status])
+        }
+      })
       .catch(error => console.log('error', error));
   };
 
@@ -273,6 +293,10 @@ const TokenForm = props => {
           onClose={handleSnackbarClose}
           open={openSnackbar}
         />
+        <ErrorSnackbar
+          message={errorMessage}
+          onClose={handleErrorClose}
+          open={openError}/>
       </form>
     </Card>
   );

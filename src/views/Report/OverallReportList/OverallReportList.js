@@ -6,6 +6,7 @@ import {Header, DepartmentTable} from './components';
 import {BASE_URL} from "../../../config";
 import TextField from "@material-ui/core/TextField";
 import {Button} from "@material-ui/core";
+import {addAuthorization} from "../../../utils/functions";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -32,7 +33,15 @@ const OverallReportList = () => {
 
     // get all the tokens
     const fetchTokens = () => {
-      fetch(BASE_URL + "/api/tokens/")
+      let myHeaders = new Headers();
+      myHeaders.append("Content-Type", "application/json");
+      myHeaders = addAuthorization(myHeaders);
+
+      let requestOptions = {
+        method: 'GET',
+        headers: myHeaders
+      };
+      fetch(BASE_URL + "/api/tokens/", requestOptions)
         .then(response => response.json())
         .then(tokens => {
           if (mounted) {

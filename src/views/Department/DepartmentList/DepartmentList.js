@@ -24,10 +24,8 @@ const DepartmentList = () => {
   const [departments, setDepartments] = useState([]);
   const [filterDepartments, setFilterDepartments] = useState([]);
   const [departmentTokens, setDepartmentTokens] = useState({});
-
   useEffect(() => {
     let mounted = true;
-
     const fetchDepartments = () => {
       fetch(BASE_URL + "/api/departments/")
         .then(response => response.json())

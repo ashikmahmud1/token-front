@@ -8,6 +8,7 @@ import SuccessSnackbar from "./components/SuccessSnackbar";
 import useRouter from 'utils/useRouter';
 import {BASE_URL} from "../../../config";
 import {addAuthorization} from "../../../utils/functions";
+import ErrorSnackbar from "./components/ErrorSnackbar";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -22,6 +23,12 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const UserEdit = () => {
+  const errors = {
+    403: "you don't have permission",
+    401: "Unauthorized",
+    404: "Not found",
+    500: "Internal server error"
+  };
   const [profile, setProfile] = useState({
     name: '',
     username: '',
@@ -33,11 +40,17 @@ const UserEdit = () => {
   const roles = {'ROLE_TOKENIST': 'tokenist', 'ROLE_STAFF': 'staff', 'ROLE_ADMIN': 'Admin'};
   const [id, setId] = useState('');
   const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [openError, setOpenError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
   const classes = useStyles();
   const router = useRouter();
 
   const handleSnackbarClose = () => {
     setOpenSnackbar(false);
+  };
+
+  const handleErrorClose = () => {
+    setOpenError(false);
   };
 
   const handleChange = event => {
@@ -91,8 +104,14 @@ const UserEdit = () => {
       fetch(BASE_URL + "/api/users/reset-password/" + id, requestOptions)
         .then(response => response.json())
         .then(result => {
-          setOpenSnackbar(true);
-          setProfile({...profile, password: '', confirmPassword: ''});
+          if (!result.status) {
+            setOpenSnackbar(true);
+            setProfile({...profile, password: '', confirmPassword: ''});
+          } else {
+            // show the error message
+            setOpenError(true);
+            setErrorMessage(errors[result.status])
+          }
         })
         .catch(error => console.log('error', error));
     } else {
@@ -119,10 +138,26 @@ const UserEdit = () => {
     setId(router.match.params.id);
 
     const fetchUser = () => {
-      fetch(BASE_URL + "/api/users/" + router.match.params.id)
+      let myHeaders = new Headers();
+      myHeaders.append("Content-Type", "application/json");
+      myHeaders = addAuthorization(myHeaders);
+
+      let requestOptions = {
+        method: 'GET',
+        headers: myHeaders
+      };
+      fetch(BASE_URL + "/api/users/" + router.match.params.id,requestOptions)
         .then(response => response.json())
         .then(result => {
-          if (mounted) setUser(result)
+          if (mounted) {
+            if (!result.status) {
+              setUser(result)
+            } else {
+              // show the error message
+              setOpenError(true);
+              setErrorMessage(errors[result.status])
+            }
+          }
         })
         .catch(error => console.log('error', error));
     };
@@ -154,6 +189,10 @@ const UserEdit = () => {
         onClose={handleSnackbarClose}
         open={openSnackbar}
       />
+      <ErrorSnackbar
+        message={errorMessage}
+        onClose={handleErrorClose}
+        open={openError}/>
     </Page>
   )
 };

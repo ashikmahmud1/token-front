@@ -98,15 +98,15 @@ export default [
         title: 'Token',
         href: '/token',
         icon: ImportContactsOutlinedIcon,
-        access: {ROLE_ADMIN: true, ROLE_STAFF: true, ROLE_TOKENIST: false},
+        access: {ROLE_ADMIN: true, ROLE_STAFF: false, ROLE_TOKENIST: false},
         children: [
           {
             title: 'Create',
-            href: '/token-create'
+            href: '/create/token'
           },
           {
             title: 'Call',
-            href: '/token-call'
+            href: '/call/token'
           }
         ]
       },
@@ -118,15 +118,15 @@ export default [
         children: [
           {
             title: 'Overall Report',
-            href: '/overall-report'
+            href: '/report/overall'
           },
           {
             title: 'User Report',
-            href: '/user-report'
+            href: '/report/user'
           },
           {
             title: 'Served Report',
-            href: '/served-report'
+            href: '/report/served'
           }
         ]
       },
@@ -134,6 +134,18 @@ export default [
         title: 'Display',
         href: '/display/show',
         icon: TvOutlinedIcon,
+        access: {ROLE_ADMIN: false, ROLE_STAFF: true, ROLE_TOKENIST: false},
+      },
+      {
+        title: 'Token Create',
+        href: '/create/token',
+        icon: ImportContactsOutlinedIcon,
+        access: {ROLE_ADMIN: false, ROLE_STAFF: false, ROLE_TOKENIST: true},
+      },
+      {
+        title: 'Token Call',
+        href: '/call/token',
+        icon: ImportContactsOutlinedIcon,
         access: {ROLE_ADMIN: false, ROLE_STAFF: true, ROLE_TOKENIST: false},
       },
       {

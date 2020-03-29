@@ -18,7 +18,7 @@ const useStyles = makeStyles(() => ({
 const Presentation = () => {
   const classes = useStyles();
   const {history} = useRouter();
-  const redirect = {ROLE_TOKENIST:'/customer/list', ROLE_STAFF:'/token-call',ROLE_ADMIN:'/user/list'};
+  const redirect = {ROLE_TOKENIST:'/customer/list', ROLE_STAFF:'/call/token',ROLE_ADMIN:'/user/list'};
   useEffect(() => {
     if (localStorage.getItem('token_user')) {
       const token_user = JSON.parse(localStorage.getItem('token_user'));

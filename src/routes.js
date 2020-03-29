@@ -165,27 +165,27 @@ const routes = [
       },
       // Token Routes
       {
-        path: '/token-create',
+        path: '/create/token',
         exact: true,
         component: lazy(() => import('views/Token/TokenCreate'))
       },
       {
-        path: '/token-call',
+        path: '/call/token',
         exact: true,
         component: lazy(() => import('views/Token/TokenCall'))
       },
       {
-        path: '/served-report',
+        path: '/report/served',
         exact: true,
         component: lazy(() => import('views/Report/ServedReportList'))
       },
       {
-        path: '/user-report',
+        path: '/report/user',
         exact: true,
         component: lazy(() => import('views/Report/UserReportList'))
       },
       {
-        path: '/overall-report',
+        path: '/report/overall',
         exact: true,
         component: lazy(() => import('views/Report/OverallReportList'))
       },

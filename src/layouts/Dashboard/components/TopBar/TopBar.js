@@ -29,6 +29,7 @@ import useRouter from 'utils/useRouter';
 import {PricingModal, NotificationsPopover} from 'components';
 import {logout} from 'actions';
 import {BASE_URL} from "../../../../config";
+import {addAuthorization} from "../../../../utils/functions";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -109,7 +110,15 @@ const TopBar = props => {
 
     // here fetch all the displays
     const fetchDisplays = () => {
-      fetch(BASE_URL + "/api/displays/")
+      let myHeaders = new Headers();
+      myHeaders.append("Content-Type", "application/json");
+      myHeaders = addAuthorization(myHeaders);
+
+      let requestOptions = {
+        method: 'GET',
+        headers: myHeaders
+      };
+      fetch(BASE_URL + "/api/displays/", requestOptions)
         .then(response => response.json())
         .then(displays => {
           if (mounted) {

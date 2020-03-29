@@ -3,6 +3,7 @@ import React, {useState} from "react";
 import Header from "./components/Header";
 import Page from "components/Page";
 import TokenForm from "./components/TokenForm";
+import useRouter from 'utils/useRouter';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -22,6 +23,9 @@ const TokenCreate = () => {
     department_id: ''
   });
   const classes = useStyles();
+  const {history} = useRouter();
+
+  console.log(history.location.pathname);
 
   return (
     <Page
