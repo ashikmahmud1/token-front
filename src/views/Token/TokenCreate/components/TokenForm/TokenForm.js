@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import {makeStyles} from '@material-ui/styles';
@@ -32,13 +32,20 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const TokenForm = props => {
+
   const {profile, className, ...rest} = props;
   const [customers, setCustomers] = useState([]);
   const [departments, setDepartments] = useState([]);
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [openError, setOpenError] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-  const myRef = React.createRef();
+  const [values, setValues] = useState({
+    customer_id: profile.customer_id,
+    department_id: profile.department_id,
+    priority: false,
+    status: profile.status
+  });
+  const myRef = useRef(React.createRef());
   const errors = {
     403: "you don't have permission",
     401: "Unauthorized",
@@ -47,12 +54,6 @@ const TokenForm = props => {
   };
 
   const classes = useStyles();
-  const [values, setValues] = useState({
-    customer_id: profile.customer_id,
-    department_id: profile.department_id,
-    priority: false,
-    status: "TOKEN_CREATED"
-  });
 
   const handleErrorClose = () => {
     setOpenError(false);
@@ -136,7 +137,6 @@ const TokenForm = props => {
       window.frames["frame1"].print();
       document.body.removeChild(frame1);
     }, 500);
-    setOpenSnackbar(true);
   };
   const onChangeCustomer = (event, customer) => {
     if (customer)
@@ -161,7 +161,8 @@ const TokenForm = props => {
       .then(response => response.json())
       .then(result => {
         if (!result.message) {
-          onCreatedToken(result)
+          setValues({...values, priority: false, customer_id: profile.customer_id});
+          onCreatedToken(result);
         } else {
           setOpenError(true);
           setErrorMessage(errors[result.status])
@@ -197,16 +198,14 @@ const TokenForm = props => {
                   option: classes.option,
                 }}
                 autoHighlight
-                getOptionLabel={option => option.number}
+                getOptionLabel={option => option.number || ''}
+                value={customers.find(c => c.id === values.customer_id) || {}}
                 onChange={onChangeCustomer}
                 renderOption={option => (
-                  <React.Fragment>
-                    <div style={{display: 'flex', width: '100%', justifyContent: 'space-between'}}>
-                      <span>{option.number}</span>
-                      <span>{option.name}</span>
-                    </div>
-
-                  </React.Fragment>
+                  <div style={{display: 'flex', width: '100%', justifyContent: 'space-between'}}>
+                    <span>{option.number}</span>
+                    <span>{option.name}</span>
+                  </div>
                 )}
                 renderInput={params => (
                   <TextField
@@ -270,7 +269,7 @@ const TokenForm = props => {
                       onChange={handleChange}
                       name="priority"
                       color="primary"
-                      defaultChecked={false}
+                      checked={values.priority}
                     />
                   }
                   label="Priority"
@@ -304,7 +303,7 @@ const TokenForm = props => {
 
 TokenForm.propTypes = {
   className: PropTypes.string,
-  profile: PropTypes.object.isRequired
+  profile: PropTypes.object.isRequired,
 };
 
 export default TokenForm;

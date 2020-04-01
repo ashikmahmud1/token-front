@@ -61,6 +61,34 @@ const UserList = () => {
     setFilterUsers(filter_array);
   };
 
+  const filterUser = (id) => {
+    let filter_users = users.filter(d => parseInt(d.id) !== parseInt(id));
+    setUsers(filter_users);
+    setFilterUsers(filter_users);
+  };
+  const deleteUser = id => {
+    let myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+    myHeaders = addAuthorization(myHeaders);
+
+    let requestOptions = {
+      method: 'DELETE',
+      headers: myHeaders
+    };
+
+    if (window.confirm("Are you sure to delete?")) {
+      fetch(BASE_URL + "/api/users/" + id, requestOptions)
+        .then(response => response.json())
+        .then(result => {
+          console.log(result);
+          if (!result.status){
+            filterUser(id)
+          }
+        })
+        .catch(error => console.log('error', error));
+    }
+  };
+
   return (
     <Page
       className={classes.root}
@@ -74,6 +102,7 @@ const UserList = () => {
         <UserTable
           className={classes.results}
           users={filterUsers}
+          deleteUser={deleteUser}
         />
       )}
     </Page>

@@ -6,6 +6,7 @@ import {SearchBar} from './components';
 import {Header, CounterTable} from './components';
 import {BASE_URL} from "../../../config";
 import {search} from "utils/functions";
+import {addAuthorization} from "../../../utils/functions";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -49,6 +50,34 @@ const CounterList = () => {
     setFilterCounters(filter_array);
   };
 
+  const filterCounter = (id) => {
+    let filter_counters = counters.filter(d => parseInt(d.id) !== parseInt(id));
+    setCounters(filter_counters);
+    setFilterCounters(filter_counters);
+  };
+  const deleteCounter = id => {
+    let myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+    myHeaders = addAuthorization(myHeaders);
+
+    let requestOptions = {
+      method: 'DELETE',
+      headers: myHeaders
+    };
+
+    if (window.confirm("Are you sure to delete?")) {
+      fetch(BASE_URL + "/api/counters/" + id, requestOptions)
+        .then(response => response.json())
+        .then(result => {
+          console.log(result);
+          if (!result.status){
+            filterCounter(id)
+          }
+        })
+        .catch(error => console.log('error', error));
+    }
+  };
+
   return (
     <Page
       className={classes.root}
@@ -62,6 +91,7 @@ const CounterList = () => {
         <CounterTable
           className={classes.results}
           counters={filterCounters}
+          deleteCounter={deleteCounter}
         />
       )}
     </Page>

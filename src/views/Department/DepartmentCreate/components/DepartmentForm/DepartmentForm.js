@@ -78,9 +78,9 @@ const DepartmentForm = props => {
       router.history.push('/department/list');
     }, 1000);
   };
-  const onChangeDepartmentColor = (color) => {
-    console.log(color);
-    setValues({...values, color: color.key});
+  const onChangeDepartmentColor = (event, color) => {
+    if (color)
+      setValues({...values, color: color.key});
   };
   const handleSubmit = event => {
     event.preventDefault();
@@ -156,8 +156,9 @@ const DepartmentForm = props => {
                 label="Start Number"
                 name="start_number"
                 onChange={handleChange}
-                value={values.age}
+                value={values.start_number}
                 type="number"
+                InputProps={{inputProps: {min: 1}}}
                 required
                 variant="outlined"
               />
@@ -173,21 +174,19 @@ const DepartmentForm = props => {
                 classes={{
                   option: classes.option,
                 }}
+                onChange={onChangeDepartmentColor}
                 autoHighlight
                 getOptionLabel={option => option.value}
                 renderOption={option => (
-                  <React.Fragment>
-                    <div style={{display: 'flex', width:'100%', justifyContent:'space-between'}} onClick={() => onChangeDepartmentColor(option)}>
-                      <span>{option.value}</span>
-                      <span style={{
-                        width: 20,
-                        height: 20,
-                        borderRadius: 20,
-                        backgroundColor: option.key,
-                      }}/>
-                    </div>
-
-                  </React.Fragment>
+                  <div style={{display: 'flex', width: '100%', justifyContent: 'space-between'}}>
+                    <span>{option.value}</span>
+                    <span style={{
+                      width: 20,
+                      height: 20,
+                      borderRadius: 20,
+                      backgroundColor: option.key,
+                    }}/>
+                  </div>
                 )}
                 renderInput={params => (
                   <TextField
@@ -196,7 +195,7 @@ const DepartmentForm = props => {
                     variant="outlined"
                     inputProps={{
                       ...params.inputProps,
-                      autoComplete: 'new-password',
+                      autoComplete: 'off',
                     }}
                   />
                 )}

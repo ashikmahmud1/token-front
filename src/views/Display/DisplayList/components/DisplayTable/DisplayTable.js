@@ -47,7 +47,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const DisplayTable = props => {
-  const {className, displays, ...rest} = props;
+  const {className, deleteDisplay, displays, ...rest} = props;
 
   const classes = useStyles();
 
@@ -144,9 +144,8 @@ const DisplayTable = props => {
                         </Button>
                         <Button
                           style={{color: '#e53935', marginLeft: 10}}
-                          component={RouterLink}
                           size="small"
-                          to="/management/customers/1"
+                          onClick={() => deleteDisplay(display.id)}
                           variant="outlined"
                         >
                           Delete
@@ -178,7 +177,8 @@ const DisplayTable = props => {
 
 DisplayTable.propTypes = {
   className: PropTypes.string,
-  displays: PropTypes.array.isRequired
+  displays: PropTypes.array.isRequired,
+  deleteDisplay: PropTypes.func.isRequired
 };
 
 DisplayTable.defaultProps = {

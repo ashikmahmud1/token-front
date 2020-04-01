@@ -57,6 +57,34 @@ const DisplayList = () => {
     setFilterDisplays(filter_array);
   };
 
+  const filterDisplay = (id) => {
+    let filter_displays = displays.filter(d => parseInt(d.id) !== parseInt(id));
+    setDisplays(filter_displays);
+    setFilterDisplays(filter_displays);
+  };
+  const deleteDisplay = id => {
+    let myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+    myHeaders = addAuthorization(myHeaders);
+
+    let requestOptions = {
+      method: 'DELETE',
+      headers: myHeaders
+    };
+
+    if (window.confirm("Are you sure to delete?")) {
+      fetch(BASE_URL + "/api/displays/" + id, requestOptions)
+        .then(response => response.json())
+        .then(result => {
+          console.log(result);
+          if (!result.status){
+            filterDisplay(id)
+          }
+        })
+        .catch(error => console.log('error', error));
+    }
+  };
+
   return (
     <Page
       className={classes.root}
@@ -70,6 +98,7 @@ const DisplayList = () => {
         <DisplayTable
           className={classes.results}
           displays={filterDisplays}
+          deleteDisplay={deleteDisplay}
         />
       )}
     </Page>

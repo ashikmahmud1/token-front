@@ -97,6 +97,7 @@ const DepartmentForm = props => {
                 onChange={handleChange}
                 value={profile.start_number}
                 type="number"
+                InputProps={{ inputProps: { min: 1 } }}
                 required
                 variant="outlined"
               />
@@ -134,7 +135,7 @@ const DepartmentForm = props => {
                     variant="outlined"
                     inputProps={{
                       ...params.inputProps,
-                      autoComplete: 'new-password',
+                      autoComplete: 'off',
                     }}
                   />
                 )}

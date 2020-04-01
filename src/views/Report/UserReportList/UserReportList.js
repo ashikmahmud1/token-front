@@ -39,8 +39,14 @@ const UserReportList = () => {
     // total token checked = SUM (token checked)
     // point = (total served time * total token checked)
     data.users.forEach(user => {
+      console.log(user);
       // filter the tokens by the user
-      let user_tokens = data.tokens.filter(t => t.user.id === user.id);
+      let user_tokens = [];
+      for (let i = 0; i < data.tokens.length; i++) {
+        if (data.tokens[i].user && data.tokens[i].user.id === user.id) {
+          user_tokens.push(data.tokens[i]);
+        }
+      }
       let total_check_up = 0;
       let milliseconds = 0;
       user_tokens.forEach(token => {

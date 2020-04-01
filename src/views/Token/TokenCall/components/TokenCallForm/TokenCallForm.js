@@ -16,6 +16,7 @@ import TokenInfo from "../TokenInfo";
 import useRouter from 'utils/useRouter';
 import SocketConnection from "../../../../../components/SocketConnection";
 import {addAuthorization} from "../../../../../utils/functions";
+import Autocomplete from "@material-ui/lab/Autocomplete";
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -49,6 +50,15 @@ class CallForm extends Component {
       counter_id: "",
       department_id: "",
       current_call: {department: null, token: null, counter: null},
+      disable_inputs: {
+        recall: false,
+        next: false,
+        stop: false,
+        present: false,
+        type: false,
+        department: false,
+        counter: false
+      },
       token_user: null,
       status: "TOKEN_CALLED",
       type: "type1",
@@ -122,14 +132,14 @@ class CallForm extends Component {
     fetch(BASE_URL + "/api/counters/")
       .then(response => response.json())
       .then(counters => {
-        this.setState({ counters, counter_id: department_counter.counter_id});
+        this.setState({counters, counter_id: department_counter.counter_id});
       })
       .catch(error => console.log('error', error));
 
     fetch(BASE_URL + "/api/departments/")
       .then(response => response.json())
       .then(departments => {
-        this.setState({ departments, department_id: department_counter.department_id});
+        this.setState({departments, department_id: department_counter.department_id});
       })
       .catch(error => console.log('error', error));
   }
@@ -146,6 +156,15 @@ class CallForm extends Component {
           ? event.target.checked
           : event.target.value
     });
+  };
+
+  onChangeCounter = (event, counter) => {
+    if (counter) {
+      let department_counter = JSON.parse(localStorage.getItem('department_counter'));
+      department_counter["counter_id"] = counter.id;
+      localStorage.setItem('department_counter', JSON.stringify(department_counter));
+      this.setState({counter_id: counter.id})
+    }
   };
 
   handleSubmit = event => {
@@ -180,19 +199,46 @@ class CallForm extends Component {
   };
 
   onStop = () => {
+    let disable_inputs = {...this.state.disable_inputs};
+    disable_inputs.department = false;
+    disable_inputs.counter = false;
+    disable_inputs.recall = true;
+    disable_inputs.stop = true;
+    this.setState({disable_inputs});
     if (this.state.current_call.department) {
       this.updateToken(this.state.current_call.token, {
-        status: "TOKEN_SERVED",
-        serving_end: new Date()
+        status: this.state.NOT_PRESENT ? "TOKEN_NOT_CAME" : "TOKEN_SERVED",
+        serving_end: this.state.NOT_PRESENT ? null : new Date()
       }).then(res => {
         localStorage.setItem('current_call', JSON.stringify({department: null, token: null, counter: null}));
         console.log('stopping...');
-        this.setState({...this.state, current_call: {department: null, token: null, counter: null}});
+        this.setState({
+          current_call: {department: null, token: null, counter: null},
+          NOT_PRESENT: false,
+          disable_inputs
+        });
       })
     }
   };
 
   onNext = () => {
+    let disable_inputs = {...this.state.disable_inputs};
+    disable_inputs.next = true;
+    disable_inputs.recall = true;
+    disable_inputs.stop = true;
+    disable_inputs.department = true;
+    disable_inputs.counter = true;
+    this.setState({disable_inputs});
+    let self = this;
+
+    // after 5s enable the  inputs
+    window.setTimeout(function () {
+      disable_inputs.next = false;
+      disable_inputs.recall = false;
+      disable_inputs.stop = false;
+      self.setState({disable_inputs});
+    }, 5000);
+
     let tokens = this.state.departmentTokens[this.state.department_id].tokens;
     let department = this.state.departments.find(d => parseInt(d.id) === parseInt(this.state.department_id));
     let counter = this.state.counters.find(c => parseInt(c.id) === parseInt(this.state.counter_id));
@@ -212,7 +258,6 @@ class CallForm extends Component {
       // update the current token is served
       this.updateToken(this.state.current_call.token, {
         status: this.state.NOT_PRESENT ? "TOKEN_NOT_CAME" : "TOKEN_SERVED",
-        counter_id: this.state.counter_id,
         type: this.state.type === 'other' ? this.state.otherText : this.state.type,
         serving_end: this.state.NOT_PRESENT ? null : new Date()
       }).then(res => res.json())
@@ -228,32 +273,36 @@ class CallForm extends Component {
               status: "TOKEN_CALLED",
               counter_id: this.state.counter_id,
               serving_start: new Date(),
-              user_id: this.state.token_user ? this.state.token_user.id: null
+              user_id: this.state.token_user ? this.state.token_user.id : null
             }).then(response => response.json())
               .then(result => {
                 console.log(result);
                 localStorage.setItem('current_call', JSON.stringify(next_call));
-                this.setState({ current_call: next_call});
+                this.setState({current_call: next_call});
               });
           } else {
+            disable_inputs.department = false;
+            disable_inputs.counter = false;
             localStorage.setItem('current_call', JSON.stringify({department: null, token: null, counter: null}));
-            this.setState({ current_call: {department: null, token: null, counter: null}});
+            this.setState({current_call: {department: null, token: null, counter: null}, disable_inputs});
           }
         })
+    } else if (next_call.token !== null) {
+      this.updateToken(next_call.token, {
+        status: "TOKEN_CALLED",
+        counter_id: this.state.counter_id,
+        serving_start: new Date(),
+        user_id: this.state.token_user ? this.state.token_user.id : null
+      }).then(response => response.json())
+        .then(result => {
+          console.log(result);
+          localStorage.setItem('current_call', JSON.stringify(next_call));
+          this.setState({current_call: next_call});
+        });
     } else {
-      if (next_call.token !== null) {
-        this.updateToken(next_call.token, {
-          status: "TOKEN_CALLED",
-          counter_id: this.state.counter_id,
-          serving_start: new Date(),
-          user_id: this.state.token_user ? this.state.token_user.id: null
-        }).then(response => response.json())
-          .then(result => {
-            console.log(result);
-            localStorage.setItem('current_call', JSON.stringify(next_call));
-            this.setState({ current_call: next_call});
-          });
-      }
+      disable_inputs.department = false;
+      disable_inputs.counter = false;
+      this.setState({disable_inputs});
     }
 
   };
@@ -284,6 +333,7 @@ class CallForm extends Component {
                   label="Select Department"
                   name="department_id"
                   onChange={this.handleChange}
+                  disabled={this.state.disable_inputs.department}
                   select
                   // eslint-disable-next-line react/jsx-sort-props
                   SelectProps={{native: true}}
@@ -307,28 +357,36 @@ class CallForm extends Component {
                 md={12}
                 xs={12}
               >
-                <TextField
-                  fullWidth
-                  label="Select Counter"
-                  name="counter_id"
-                  onChange={this.handleChange}
-                  select
-                  // eslint-disable-next-line react/jsx-sort-props
-                  SelectProps={{native: true}}
-                  value={this.state.counter_id}
-                  required
-                  variant="outlined"
-                >
-                  <option value=""/>
-                  {counters.map(counter => (
-                    <option
-                      key={counter.id}
-                      value={counter.id}
-                    >
-                      {counter.name}
-                    </option>
-                  ))}
-                </TextField>
+                <Autocomplete
+                  id="select-counter"
+                  options={counters}
+                  classes={{
+                    option: classes.option,
+                  }}
+                  autoHighlight
+                  disabled={this.state.disable_inputs.counter}
+                  getOptionLabel={option => option.name || ''}
+                  value={counters.find(c => c.id === this.state.counter_id) || {}}
+                  onChange={this.onChangeCounter}
+                  renderOption={option => (
+                    <div style={{display: 'flex', width: '100%', justifyContent: 'space-between'}}>
+                      <span>{option.name}</span>
+                      <span>{option.letter}</span>
+                    </div>
+                  )}
+                  renderInput={params => (
+                    <TextField
+                      {...params}
+                      label="Select Counter"
+                      variant="outlined"
+                      required
+                      inputProps={{
+                        ...params.inputProps,
+                        autoComplete: 'off',
+                      }}
+                    />
+                  )}
+                />
               </Grid>
               <Grid
                 item
@@ -336,6 +394,7 @@ class CallForm extends Component {
                 xs={12}
               >
                 <TokenInfo
+                  disableInputs={this.state.disable_inputs}
                   type={this.state.type}
                   otherText={this.state.otherText}
                   NOT_PRESENT={this.state.NOT_PRESENT}

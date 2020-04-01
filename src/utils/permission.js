@@ -38,11 +38,11 @@ const permissions = {
 export function checkPermission(pathname) {
   // first split the pathname
   const split_path = pathname.split('/');
-  if (split_path.length > 2){
-    const join_path = split_path[1]+'_'+split_path[2];
+  if (split_path.length > 2) {
+    const join_path = split_path[1] + '_' + split_path[2];
     const token_user = JSON.parse(localStorage.getItem('token_user'));
 
-    return permissions[join_path][token_user.roles[0]];
+    return permissions[join_path] ? permissions[join_path][token_user.roles[0]] : true;
   }
   return true;
 

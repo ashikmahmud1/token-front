@@ -65,6 +65,16 @@ const UserEdit = () => {
     });
   };
 
+  const onEditedUser = () => {
+    // redirect back to the list page
+    // show the snackbar
+    setOpenSnackbar(true);
+    // redirect to the user list page
+    setTimeout(() => {
+      router.history.goBack('/user/list');
+    }, 1000);
+  };
+
   const handleSubmit = event => {
     event.preventDefault();
     let myHeaders = new Headers();
@@ -81,7 +91,9 @@ const UserEdit = () => {
 
     fetch(BASE_URL + "/api/users/edit/" + id, requestOptions)
       .then(response => response.json())
-      .then(result => setOpenSnackbar(true))
+      .then(result => {
+        onEditedUser();
+      })
       .catch(error => console.log('error', error));
   };
 
@@ -104,13 +116,18 @@ const UserEdit = () => {
       fetch(BASE_URL + "/api/users/reset-password/" + id, requestOptions)
         .then(response => response.json())
         .then(result => {
-          if (!result.status) {
-            setOpenSnackbar(true);
-            setProfile({...profile, password: '', confirmPassword: ''});
-          } else {
-            // show the error message
+          if (result.status) {
+            if (result.errors) {
+              setErrorMessage(result.errors[0].field + ' ' + result.errors[0].defaultMessage);
+            } else {
+              setErrorMessage(result.message || '');
+            }
             setOpenError(true);
-            setErrorMessage(errors[result.status])
+          } else {
+            setOpenSnackbar(true);
+            setTimeout(() => {
+              router.history.push('/user/list');
+            }, 1000);
           }
         })
         .catch(error => console.log('error', error));

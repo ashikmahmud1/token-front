@@ -109,7 +109,7 @@ const OverallReportTable = props => {
                       <TableCell>{token.user ? token.user.name:''}</TableCell>
                       <TableCell>{token.customer ? token.customer.name:''}</TableCell>
                       <TableCell>{token.token_number}</TableCell>
-                      <TableCell>{token.department.letter}</TableCell>
+                      <TableCell>{token.department ? token.department.letter:''}</TableCell>
                       <TableCell>{token.counter ? token.counter.letter:''}</TableCell>
                       <TableCell>{token.type}</TableCell>
                       <TableCell>{token.createdAt}</TableCell>

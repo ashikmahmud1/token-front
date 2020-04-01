@@ -47,7 +47,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const CounterTable = props => {
-  const {className, counters, ...rest} = props;
+  const {className, deleteCounter, counters, ...rest} = props;
 
   const classes = useStyles();
 
@@ -127,9 +127,8 @@ const CounterTable = props => {
                         </Button>
                         <Button
                           style={{color: '#e53935', marginLeft: 10}}
-                          component={RouterLink}
+                          onClick={() => deleteCounter(counter.id)}
                           size="small"
-                          to="/management/customers/1"
                           variant="outlined"
                         >
                           Delete
@@ -161,7 +160,8 @@ const CounterTable = props => {
 
 CounterTable.propTypes = {
   className: PropTypes.string,
-  counters: PropTypes.array.isRequired
+  counters: PropTypes.array.isRequired,
+  deleteCounter: PropTypes.func.isRequired
 };
 
 CounterTable.defaultProps = {

@@ -38,6 +38,9 @@ const QueueColumn = props => {
     <Box width={totalItems > 0 ? 1 / totalItems : 'auto'}>
       <table className={"queue-table " + classes.queueTable}>
         <thead>
+        <tr style={{ color: department.color, borderBottom: "10px solid #fff"}}>
+          <th className="center-align" colSpan={2}><h3 style={{margin: 0, padding: 0}}>{department.name}</h3></th>
+        </tr>
         <tr style={{backgroundColor: department.color, color: "#fff"}}>
           <th className="center-align"><h3 style={{margin: 0, padding: 0}}>{department.letter}</h3></th>
           <th className="center-align"><h3 style={{margin: 0, padding: 0}}>Counter</h3></th>

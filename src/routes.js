@@ -175,6 +175,11 @@ const routes = [
         component: lazy(() => import('views/Token/TokenCall'))
       },
       {
+        path: '/waiting/tokens',
+        exact: true,
+        component: lazy(() => import('views/Dashboard'))
+      },
+      {
         path: '/report/served',
         exact: true,
         component: lazy(() => import('views/Report/ServedReportList'))

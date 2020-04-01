@@ -85,14 +85,23 @@ const DepartmentList = () => {
     setFilterDepartments(filter_departments);
   };
   const deleteDepartment = id => {
+    let myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+    myHeaders = addAuthorization(myHeaders);
+
     let requestOptions = {
-      method: 'DELETE'
+      method: 'DELETE',
+      headers: myHeaders
     };
 
     if (window.confirm("Are you sure to delete?")) {
       fetch(BASE_URL + "/api/departments/" + id, requestOptions)
         .then(response => response.json())
-        .then(result => filterDepartment(id))
+        .then(result => {
+          if (!result.status) {
+            filterDepartment(id)
+          }
+        })
         .catch(error => console.log('error', error));
     }
   };

@@ -47,7 +47,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const UserTable = props => {
-  const {className, users, ...rest} = props;
+  const {className, deleteUser, users, ...rest} = props;
 
   const classes = useStyles();
 
@@ -136,9 +136,8 @@ const UserTable = props => {
                         </Button>
                         <Button
                           style={{color: '#e53935', marginLeft: 10}}
-                          component={RouterLink}
+                          onClick={() => deleteUser(user.id)}
                           size="small"
-                          to="/management/users/1"
                           variant="outlined"
                         >
                           Delete
@@ -170,7 +169,8 @@ const UserTable = props => {
 
 UserTable.propTypes = {
   className: PropTypes.string,
-  users: PropTypes.array.isRequired
+  users: PropTypes.array.isRequired,
+  deleteUser: PropTypes.func.isRequired
 };
 
 UserTable.defaultProps = {

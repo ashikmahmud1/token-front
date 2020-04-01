@@ -34,7 +34,11 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const TokenInfo = props => {
-  const {customer, type, otherText, NOT_PRESENT, className, onStop, onNext, onReCall, onChangeType, onChangeText, ...rest} = props;
+  const {
+    customer, type, disableInputs,
+    otherText, NOT_PRESENT, className, onStop,
+    onNext, onReCall, onChangeType, onChangeText, ...rest
+  } = props;
 
   const classes = useStyles();
 
@@ -89,6 +93,7 @@ const TokenInfo = props => {
               <TableCell>
                 <Box display="flex" flexDirection="column">
                   <TextField
+                    disabled={disableInputs.type}
                     fullWidth
                     label="Select Type"
                     name="type"
@@ -112,7 +117,7 @@ const TokenInfo = props => {
                   {
                     (type === 'other') && (
                       <TextField
-                        style={{marginTop:20}}
+                        style={{marginTop: 20}}
                         fullWidth
                         label="Enter type"
                         name="otherText"
@@ -151,6 +156,7 @@ const TokenInfo = props => {
         <Button
           color="primary"
           size="small"
+          disabled={disableInputs.recall}
           onClick={() => onReCall()}
           variant="contained"
         >
@@ -159,6 +165,7 @@ const TokenInfo = props => {
         <Button
           style={{marginLeft: 10, backgroundColor: "#ef6c00", color: "#fff"}}
           size="small"
+          disabled={disableInputs.next}
           onClick={() => onNext()}
           variant="contained"
         >
@@ -167,6 +174,7 @@ const TokenInfo = props => {
         <Button
           style={{marginLeft: 10, backgroundColor: "#d32f2f", color: "#fff"}}
           size="small"
+          disabled={disableInputs.stop}
           onClick={() => onStop()}
           variant="contained"
         >
@@ -187,7 +195,8 @@ TokenInfo.propTypes = {
   NOT_PRESENT: PropTypes.bool.isRequired,
   otherText: PropTypes.string.isRequired,
   onChangeType: PropTypes.func.isRequired,
-  onChangeText: PropTypes.func.isRequired
+  onChangeText: PropTypes.func.isRequired,
+  disableInputs: PropTypes.object.isRequired
 };
 
 export default TokenInfo;

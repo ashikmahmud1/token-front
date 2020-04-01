@@ -3,17 +3,23 @@
 import React from 'react';
 import PeopleIcon from '@material-ui/icons/PeopleOutlined';
 import PersonIcon from '@material-ui/icons/PersonOutlined';
-import SettingsIcon from '@material-ui/icons/SettingsOutlined';
 import HomeOutlinedIcon from '@material-ui/icons/HomeOutlined';
 import TvOutlinedIcon from '@material-ui/icons/TvOutlined';
 import ImportContactsOutlinedIcon from '@material-ui/icons/ImportContactsOutlined';
 import AssessmentIcon from '@material-ui/icons/Assessment';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import DashboardIcon from '@material-ui/icons/Dashboard';
 
 export default [
   {
     title: 'Pages',
     pages: [
+      {
+        title: 'Dashboard',
+        href: '/waiting/tokens',
+        icon: DashboardIcon,
+        access: {ROLE_ADMIN: true, ROLE_STAFF: true, ROLE_TOKENIST: true},
+      },
       {
         title: 'User',
         href: '/user',

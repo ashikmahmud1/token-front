@@ -17,6 +17,7 @@ import useRouter from 'utils/useRouter';
 import SuccessSnackbar from '../SuccessSnackbar';
 import {BASE_URL} from "../../../../../config";
 import {addAuthorization} from "../../../../../utils/functions";
+import ErrorSnackbar from "../ErrorSnackbar";
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -33,6 +34,8 @@ const UserForm = props => {
   const {profile, className, ...rest} = props;
   const router = useRouter();
   const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [openError, setOpenError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   const classes = useStyles();
   const [values, setValues] = useState({
@@ -56,28 +59,36 @@ const UserForm = props => {
     });
   };
 
+  const handleErrorClose = () => {
+    setOpenError(false);
+  };
+
   const handleSnackbarClose = () => {
     setOpenSnackbar(false);
   };
 
   const onCreatedUser = (result) => {
-    if (result.status === 403){
-
-    }
     console.log(result);
-    // show the snackbar
-    setOpenSnackbar(true);
-    // redirect to the user list page
-    setTimeout(() => {
-      router.history.push('/user/list');
-    }, 1000);
+    if (result.status) {
+      if (result.errors) {
+        setErrorMessage(result.errors[0].field + ' ' + result.errors[0].defaultMessage);
+      } else {
+        setErrorMessage(result.message || '');
+      }
+      setOpenError(true);
+    } else {
+      setOpenSnackbar(true);
+      setTimeout(() => {
+        router.history.push('/user/list');
+      }, 1000);
+    }
   };
 
   const handleSubmit = event => {
     event.preventDefault();
-    const user = {...values, role:[values.role]};
+    const user = {...values, role: [values.role]};
 
-    if (user.password === user.confirmPassword){
+    if (user.password === user.confirmPassword) {
       let myHeaders = new Headers();
       myHeaders.append("Content-Type", "application/json");
       myHeaders = addAuthorization(myHeaders);
@@ -234,6 +245,10 @@ const UserForm = props => {
         onClose={handleSnackbarClose}
         open={openSnackbar}
       />
+      <ErrorSnackbar
+        message={errorMessage}
+        onClose={handleErrorClose}
+        open={openError}/>
     </Card>
   );
 };
