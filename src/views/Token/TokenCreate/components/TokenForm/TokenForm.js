@@ -43,7 +43,7 @@ const TokenForm = props => {
     customer_id: profile.customer_id,
     department_id: profile.department_id,
     priority: false,
-    status: profile.status
+    status: 'TOKEN_CREATED'
   });
   const myRef = useRef(React.createRef());
   const errors = {

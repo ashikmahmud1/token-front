@@ -17,6 +17,7 @@ import {BASE_URL} from "../../../../../config";
 import useRouter from 'utils/useRouter';
 import SuccessSnackbar from '../SuccessSnackbar';
 import {addAuthorization} from "../../../../../utils/functions";
+import ErrorSnackbar from "../../../../User/UserCreate/components/ErrorSnackbar";
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -33,6 +34,8 @@ const CounterForm = props => {
   const {profile, className, ...rest} = props;
   const router = useRouter();
   const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [openError, setOpenError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   const classes = useStyles();
   const [values, setValues] = useState({
@@ -55,13 +58,25 @@ const CounterForm = props => {
   const handleSnackbarClose = () => {
     setOpenSnackbar(false);
   };
-  const onCreatedCounter = (counter) => {
-    console.log(counter);
-    setOpenSnackbar(true);
-    // redirect to the counter list page
-    setTimeout(() => {
-      router.history.push('/counter/list');
-    }, 1000);
+
+  const handleErrorClose = () => {
+    setOpenError(false);
+  };
+
+  const onCreatedCounter = (result) => {
+    if (result.status) {
+      if (result.errors) {
+        setErrorMessage(result.errors[0].field + ' ' + result.errors[0].defaultMessage);
+      } else {
+        setErrorMessage(result.message || '');
+      }
+      setOpenError(true);
+    } else {
+      setOpenSnackbar(true);
+      setTimeout(() => {
+        router.history.push('/counter/list');
+      }, 1000);
+    }
   };
   const handleSubmit = event => {
     event.preventDefault();
@@ -145,6 +160,10 @@ const CounterForm = props => {
         onClose={handleSnackbarClose}
         open={openSnackbar}
       />
+      <ErrorSnackbar
+        message={errorMessage}
+        onClose={handleErrorClose}
+        open={openError}/>
     </Card>
   );
 };

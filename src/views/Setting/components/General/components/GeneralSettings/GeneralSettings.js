@@ -17,6 +17,7 @@ import {
 import SuccessSnackbar from '../SuccessSnackbar';
 import {BASE_URL} from "../../../../../../config";
 import {addAuthorization} from "../../../../../../utils/functions";
+import ErrorSnackbar from "../../../../../User/UserCreate/components/ErrorSnackbar";
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -35,6 +36,8 @@ const GeneralSettings = props => {
   const classes = useStyles();
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [tokenUser, setTokenUser] = useState({});
+  const [openError, setOpenError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
   const [values, setValues] = useState({
     password: '',
     confirmPassword: '',
@@ -51,6 +54,22 @@ const GeneralSettings = props => {
           ? event.target.checked
           : event.target.value
     });
+  };
+
+  const onResetPassword = (result) => {
+    if (result.status) {
+      if (result.errors) {
+        setErrorMessage(result.errors[0].field + ' ' + result.errors[0].defaultMessage);
+      } else {
+        setErrorMessage(result.message || '');
+      }
+      setOpenError(true);
+    } else {
+      setOpenSnackbar(true);
+      // update the token user
+      localStorage.setItem('token_user', JSON.stringify(result));
+      setValues({...values, password: '', confirmPassword: '', oldPassword: ''});
+    }
   };
 
   const handleSubmit = event => {
@@ -72,24 +91,23 @@ const GeneralSettings = props => {
         body: raw
       };
 
-      fetch(BASE_URL + "/api/users/reset-password/" + tokenUser.id, requestOptions)
+      fetch(BASE_URL + "/api/users/me/reset-password/" + tokenUser.id, requestOptions)
         .then(response => response.json())
         .then(result => {
-          setOpenSnackbar(true);
-          // update the token user
-          localStorage.setItem('token_user', JSON.stringify(result));
-          setValues({...values, password: '', confirmPassword: '', oldPassword: ''});
+          onResetPassword(result);
         })
         .catch(error => console.log('error', error));
     } else {
       alert('password and confirm password should be same.')
     }
-    console.log(values);
-    setOpenSnackbar(true);
   };
 
   const handleSnackbarClose = () => {
     setOpenSnackbar(false);
+  };
+
+  const handleErrorClose = () => {
+    setOpenError(false);
   };
 
   useEffect(() => {
@@ -176,6 +194,10 @@ const GeneralSettings = props => {
         onClose={handleSnackbarClose}
         open={openSnackbar}
       />
+      <ErrorSnackbar
+        message={errorMessage}
+        onClose={handleErrorClose}
+        open={openError}/>
     </Card>
   );
 };

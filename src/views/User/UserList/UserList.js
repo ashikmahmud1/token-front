@@ -57,7 +57,7 @@ const UserList = () => {
   }, []);
 
   const handleSearch = (event) => {
-    const filter_array = search(users, ['name', 'username', 'email'], event.target.value);
+    const filter_array = search(users, ['name', 'username', 'email','roles'], event.target.value);
     setFilterUsers(filter_array);
   };
 

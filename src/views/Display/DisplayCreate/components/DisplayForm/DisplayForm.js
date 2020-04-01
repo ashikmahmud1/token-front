@@ -18,6 +18,7 @@ import {BASE_URL} from "../../../../../config";
 import useRouter from 'utils/useRouter';
 import SuccessSnackbar from '../SuccessSnackbar';
 import {addAuthorization} from "../../../../../utils/functions";
+import ErrorSnackbar from "../../../../User/UserCreate/components/ErrorSnackbar";
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -39,6 +40,8 @@ const DisplayForm = props => {
   const {profile, className, ...rest} = props;
   const router = useRouter();
   const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [openError, setOpenError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   const classes = useStyles();
   const [values, setValues] = useState({
@@ -63,6 +66,11 @@ const DisplayForm = props => {
   const handleSnackbarClose = () => {
     setOpenSnackbar(false);
   };
+
+  const handleErrorClose = () => {
+    setOpenError(false);
+  };
+
   const onChangeDepartmentSelection = (event, dept_id) => {
     let selected_departments = [...values.selected_departments];
     if (event.target.checked) {
@@ -74,13 +82,19 @@ const DisplayForm = props => {
   };
 
   const onCreatedDisplay = (result) => {
-    console.log(result);
-    // show the snackbar
-    setOpenSnackbar(true);
-    // redirect to the display list page
-    setTimeout(() => {
-      router.history.push('/display/list');
-    }, 1000);
+    if (result.status) {
+      if (result.errors) {
+        setErrorMessage(result.errors[0].field + ' ' + result.errors[0].defaultMessage);
+      } else {
+        setErrorMessage(result.message || '');
+      }
+      setOpenError(true);
+    } else {
+      setOpenSnackbar(true);
+      setTimeout(() => {
+        router.history.push('/display/list');
+      }, 1000);
+    }
   };
   const handleSubmit = event => {
     event.preventDefault();
@@ -219,6 +233,10 @@ const DisplayForm = props => {
         onClose={handleSnackbarClose}
         open={openSnackbar}
       />
+      <ErrorSnackbar
+        message={errorMessage}
+        onClose={handleErrorClose}
+        open={openError}/>
     </Card>
   );
 };
