@@ -47,8 +47,13 @@ const useStyles = makeStyles(theme => ({
 
 const OverallReportTable = props => {
   const {className, tokens, ...rest} = props;
-
   const classes = useStyles();
+  const dict = {
+    'TOKEN_CREATED': 'Created',
+    'TOKEN_SERVED': 'Served',
+    'TOKEN_CALLED': 'Called',
+    'TOKEN_NOT_CAME': 'Not present'
+  };
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
@@ -93,6 +98,7 @@ const OverallReportTable = props => {
                     <TableCell align='center'>Department</TableCell>
                     <TableCell align='center'>Counter</TableCell>
                     <TableCell align='center'>Type</TableCell>
+                    <TableCell align='center'>Status</TableCell>
                     <TableCell align='center'>Date</TableCell>
                     <TableCell align='center'>Serving Start</TableCell>
                     <TableCell align='center'>Serving End</TableCell>
@@ -106,16 +112,20 @@ const OverallReportTable = props => {
                       key={token.id}
                     >
                       <TableCell align='center'>{index + 1}</TableCell>
-                      <TableCell align='center'>{token.user ? token.user.name:''}</TableCell>
-                      <TableCell align='center'>{token.customer ? token.customer.name:''}</TableCell>
+                      <TableCell align='center'>{token.user ? token.user.name : '-'}</TableCell>
+                      <TableCell align='center'>{token.customer ? token.customer.name : '-'}</TableCell>
                       <TableCell align='center'>{token.token_number}</TableCell>
-                      <TableCell align='center'>{token.department ? token.department.letter:''}</TableCell>
-                      <TableCell align='center'>{token.counter ? token.counter.name:''}</TableCell>
-                      <TableCell align='center'>{token.type}</TableCell>
+                      <TableCell align='center'>{token.department ? token.department.letter : '-'}</TableCell>
+                      <TableCell align='center'>{token.counter ? token.counter.name : '-'}</TableCell>
+                      <TableCell align='center'>{token.type ? token.type : '-'}</TableCell>
+                      <TableCell align='center'>{dict[token.status]}</TableCell>
                       <TableCell align='center'>{token.createdAt}</TableCell>
-                      <TableCell align='center'>{token.serving_start ? moment(token.serving_start).format('LTS'):''}</TableCell>
-                      <TableCell align='center'>{token.serving_end ? moment(token.serving_end).format('LTS'):''}</TableCell>
-                      <TableCell align='center'>{token.status === 'TOKEN_SERVED' ? msToTime(new Date(token.serving_end) - new Date(token.serving_start)) :''}</TableCell>
+                      <TableCell
+                        align='center'>{token.serving_start ? moment(token.serving_start).format('LTS') : '-'}</TableCell>
+                      <TableCell
+                        align='center'>{token.serving_end ? moment(token.serving_end).format('LTS') : '-'}</TableCell>
+                      <TableCell
+                        align='center'>{token.status === 'TOKEN_SERVED' ? msToTime(new Date(token.serving_end) - new Date(token.serving_start)) : '-'}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>

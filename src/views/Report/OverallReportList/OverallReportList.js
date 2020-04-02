@@ -33,6 +33,14 @@ const OverallReportList = () => {
   const [filterTokens, setFilterTokens] = useState([]);
   const [fromDate, setFromDate] = useState('');
   const [toDate, setToDate] = useState('');
+  const [status, setStatus] = useState('');
+
+  const status_arr = [
+    {key: "TOKEN_CREATED", value: "Created"},
+    {key: "TOKEN_SERVED", value: "Served"},
+    {key: "TOKEN_CALLED", value: "Called"},
+    {key: "TOKEN_NOT_CAME", value: "Not Present"},
+  ];
 
   useEffect(() => {
     let mounted = true;
@@ -65,8 +73,14 @@ const OverallReportList = () => {
     };
   }, []);
 
+  const onChangeStatus = (status) => {
+    setStatus(status);
+    const filter_array = search(tokens, ['status'], status);
+    setFilterTokens(filter_array);
+  };
+
   const handleSearch = (event) => {
-    const filter_array = search(tokens, ['token_number', 'user', 'customer','counter','department','type','priority'], event.target.value);
+    const filter_array = search(tokens, ['token_number', 'user', 'customer', 'counter', 'department', 'type', 'priority'], event.target.value);
     setFilterTokens(filter_array);
   };
 
@@ -76,7 +90,7 @@ const OverallReportList = () => {
     if (fromDate !== '') {
       filter_tokens = tokens.filter(t => new Date(t.createdAt) >= new Date(fromDate));
     }
-    if (toDate !== ''){
+    if (toDate !== '') {
       filter_tokens = tokens.filter(t => new Date(t.createdAt) <= new Date(toDate));
     }
     setFilterTokens(filter_tokens);
@@ -133,6 +147,29 @@ const OverallReportList = () => {
             className={classes.search}
             onSearch={handleSearch}
           />
+          <TextField
+            fullWidth
+            style={{marginTop:10}}
+            label="Select Status"
+            name="status"
+            onChange={(event) => onChangeStatus(event.target.value)}
+            select
+            // eslint-disable-next-line react/jsx-sort-props
+            SelectProps={{native: true}}
+            value={status}
+            required
+            variant="outlined"
+          >
+            <option value=""/>
+            {status_arr.map(status => (
+              <option
+                key={status.key}
+                value={status.key}
+              >
+                {status.value}
+              </option>
+            ))}
+          </TextField>
         </Grid>
       </Grid>
       {tokens.length > 0 && (

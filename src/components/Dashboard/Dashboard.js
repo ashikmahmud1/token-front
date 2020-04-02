@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {makeStyles} from '@material-ui/styles';
 
 import {Page} from 'components';
-import {Header, QueueNumber} from './components';
+import {QueueNumber} from './components';
 import SocketConnection from "../../components/SocketConnection";
 import Grid from "@material-ui/core/Grid";
 

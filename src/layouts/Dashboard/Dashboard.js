@@ -1,4 +1,4 @@
-import React, {Suspense, useEffect, useState} from 'react';
+import React, {Suspense, useState} from 'react';
 import {renderRoutes} from 'react-router-config';
 import PropTypes from 'prop-types';
 import {makeStyles} from '@material-ui/styles';
@@ -76,7 +76,6 @@ const Dashboard = props => {
           </Suspense>
         </main>
       </div>
-      {/*<ChatBar />*/}
     </div>
   );
 };
