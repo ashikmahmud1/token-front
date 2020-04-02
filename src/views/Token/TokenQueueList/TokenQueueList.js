@@ -77,11 +77,25 @@ class QueueList extends Component {
   };
 
   onTokenCalled = (departmentTokens, token) => {
+
     if (this.state.departmentTokens[token.department.id]) {
-      let message = 'token ' + token.token_number + ' counter ' + token.counter.letter;
-      // Synthesis support. Make your web apps talk!
-      let msg = new SpeechSynthesisUtterance(message);
-      window.speechSynthesis.speak(msg);
+      // check if the called token is in the current display
+      let found = false;
+      for (let i = this.state.from_queue - 1; i < this.state.to_queue; i++) {
+        if (this.state.departmentTokens[token.department.id].tokens[i]) {
+          if (this.state.departmentTokens[token.department.id].tokens[i].id === token.id) {
+            found = true;
+            break;
+          }
+        }
+      }
+      // if found in the display then play the sound
+      if (found) {
+        let message = 'token ' + token.token_number + ' counter ' + token.counter.letter;
+        // Synthesis support. Make your web apps talk!
+        let msg = new SpeechSynthesisUtterance(message);
+        window.speechSynthesis.speak(msg);
+      }
     }
     this.onSetTokens(departmentTokens);
   };

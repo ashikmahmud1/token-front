@@ -88,7 +88,7 @@ const DisplayList = () => {
   return (
     <Page
       className={classes.root}
-      title="Customer Management List"
+      title="Display Management List"
     >
       <Header/>
       <SearchBar
