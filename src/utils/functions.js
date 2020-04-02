@@ -21,14 +21,19 @@ export function search(arr = [], keys = [], value = '') {
             new_arr.push(currentValue);
             break;
           }
-        } else if (keys[i] === 'customer' || keys[i] === 'user' || keys[i] === 'counter') {
-          if (currentValue[keys[i]].name.toLowerCase().includes(value.trim().toLowerCase())) {
+        } else if (keys[i] === 'customer' || keys[i] === 'user' || keys[i] === 'counter' || keys[i] === 'department') {
+          if (currentValue[keys[i]]) {
+            if (currentValue[keys[i]].name.toLowerCase().includes(value.trim().toLowerCase())) {
+              new_arr.push(currentValue);
+              break;
+            }
+          }
+        } else if (currentValue[keys[i]] !== null) {
+          let str_value = "" + currentValue[keys[i]];
+          if (str_value.toLowerCase().includes(value.trim().toLowerCase())) {
             new_arr.push(currentValue);
             break;
           }
-        } else if (currentValue[keys[i]].toLowerCase().includes(value.trim().toLowerCase())) {
-          new_arr.push(currentValue);
-          break;
         }
       }
 

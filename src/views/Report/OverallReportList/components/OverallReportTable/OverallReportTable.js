@@ -86,17 +86,17 @@ const OverallReportTable = props => {
               <Table>
                 <TableHead>
                   <TableRow>
-                    <TableCell>#</TableCell>
-                    <TableCell>User</TableCell>
-                    <TableCell>Customer</TableCell>
-                    <TableCell>Number</TableCell>
-                    <TableCell>Department</TableCell>
-                    <TableCell>Counter</TableCell>
-                    <TableCell>Type</TableCell>
-                    <TableCell>Date</TableCell>
-                    <TableCell>Serving Start</TableCell>
-                    <TableCell>Serving End</TableCell>
-                    <TableCell>Served Time</TableCell>
+                    <TableCell align='center'>#</TableCell>
+                    <TableCell align='center'>User</TableCell>
+                    <TableCell align='center'>Customer</TableCell>
+                    <TableCell align='center'>Number</TableCell>
+                    <TableCell align='center'>Department</TableCell>
+                    <TableCell align='center'>Counter</TableCell>
+                    <TableCell align='center'>Type</TableCell>
+                    <TableCell align='center'>Date</TableCell>
+                    <TableCell align='center'>Serving Start</TableCell>
+                    <TableCell align='center'>Serving End</TableCell>
+                    <TableCell align='center'>Served Time</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -105,17 +105,17 @@ const OverallReportTable = props => {
                       hover
                       key={token.id}
                     >
-                      <TableCell>{index + 1}</TableCell>
-                      <TableCell>{token.user ? token.user.name:''}</TableCell>
-                      <TableCell>{token.customer ? token.customer.name:''}</TableCell>
-                      <TableCell>{token.token_number}</TableCell>
-                      <TableCell>{token.department ? token.department.letter:''}</TableCell>
-                      <TableCell>{token.counter ? token.counter.letter:''}</TableCell>
-                      <TableCell>{token.type}</TableCell>
-                      <TableCell>{token.createdAt}</TableCell>
-                      <TableCell>{token.serving_start ? moment(token.serving_start).format('LTS'):''}</TableCell>
-                      <TableCell>{token.serving_end ? moment(token.serving_end).format('LTS'):''}</TableCell>
-                      <TableCell>{token.status === 'TOKEN_SERVED' ? msToTime(new Date(token.serving_end) - new Date(token.serving_start)) :''}</TableCell>
+                      <TableCell align='center'>{index + 1}</TableCell>
+                      <TableCell align='center'>{token.user ? token.user.name:''}</TableCell>
+                      <TableCell align='center'>{token.customer ? token.customer.name:''}</TableCell>
+                      <TableCell align='center'>{token.token_number}</TableCell>
+                      <TableCell align='center'>{token.department ? token.department.letter:''}</TableCell>
+                      <TableCell align='center'>{token.counter ? token.counter.name:''}</TableCell>
+                      <TableCell align='center'>{token.type}</TableCell>
+                      <TableCell align='center'>{token.createdAt}</TableCell>
+                      <TableCell align='center'>{token.serving_start ? moment(token.serving_start).format('LTS'):''}</TableCell>
+                      <TableCell align='center'>{token.serving_end ? moment(token.serving_end).format('LTS'):''}</TableCell>
+                      <TableCell align='center'>{token.status === 'TOKEN_SERVED' ? msToTime(new Date(token.serving_end) - new Date(token.serving_start)) :''}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>

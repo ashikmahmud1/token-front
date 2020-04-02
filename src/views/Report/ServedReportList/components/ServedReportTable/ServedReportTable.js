@@ -59,6 +59,10 @@ const ServedReportTable = props => {
   const handleChangeRowsPerPage = event => {
     setRowsPerPage(event.target.value);
   };
+  let total_served = 0;
+  for (let i = 0; i < reportData.length; i++) {
+    total_served = total_served + reportData[i].total_served;
+  }
 
 
   return (
@@ -120,6 +124,15 @@ const ServedReportTable = props => {
         </CardActions>
       </Card>
       <TableEditBar selected={selectedDepartments}/>
+      <Table>
+        <TableBody>
+          <TableRow>
+            <TableCell>Total Served</TableCell>
+            <TableCell>{total_served}</TableCell>
+            <TableCell/>
+          </TableRow>
+        </TableBody>
+      </Table>
     </div>
   );
 };

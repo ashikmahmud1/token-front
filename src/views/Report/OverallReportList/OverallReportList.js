@@ -5,8 +5,9 @@ import {Page} from 'components';
 import {Header, DepartmentTable} from './components';
 import {BASE_URL} from "../../../config";
 import TextField from "@material-ui/core/TextField";
-import {Button} from "@material-ui/core";
-import {addAuthorization} from "../../../utils/functions";
+import {Button, Grid} from "@material-ui/core";
+import {addAuthorization, search} from "../../../utils/functions";
+import {Search} from "./components/";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -18,7 +19,12 @@ const useStyles = makeStyles(theme => ({
   saveButton: {
     marginTop: 10,
     marginLeft: 10
-  }
+  },
+  search: {
+    flexGrow: 1,
+    maxWidth: 480,
+    flexBasis: 480
+  },
 }));
 
 const OverallReportList = () => {
@@ -59,6 +65,11 @@ const OverallReportList = () => {
     };
   }, []);
 
+  const handleSearch = (event) => {
+    const filter_array = search(tokens, ['token_number', 'user', 'customer','counter','department','type','priority'], event.target.value);
+    setFilterTokens(filter_array);
+  };
+
   const filter = () => {
     // check if fromDate is '' or not
     let filter_tokens = [...tokens];
@@ -77,38 +88,53 @@ const OverallReportList = () => {
       title="Overall Report"
     >
       <Header/>
-      <TextField
-        id="date"
-        label="From Date"
-        type="date"
-        value={fromDate}
-        className={classes.textField}
-        onChange={event => setFromDate(event.target.value)}
-        InputLabelProps={{
-          shrink: true,
-        }}
-      />
-      <TextField
-        id="date"
-        label="To Date"
-        type="date"
-        value={toDate}
-        style={{marginLeft: 20}}
-        className={classes.textField}
-        onChange={event => setToDate(event.target.value)}
-        InputLabelProps={{
-          shrink: true,
-        }}
-      />
-      <Button
-        className={classes.saveButton}
-        onClick={() => filter()}
-        color='primary'
-        type="submit"
-        variant="contained"
+      <Grid
+        container
+        direction="row"
+        justify="space-between"
+        alignItems="center"
       >
-        GO
-      </Button>
+        <Grid item>
+          <TextField
+            id="date"
+            label="From Date"
+            type="date"
+            value={fromDate}
+            className={classes.textField}
+            onChange={event => setFromDate(event.target.value)}
+            InputLabelProps={{
+              shrink: true,
+            }}
+          />
+          <TextField
+            id="date"
+            label="To Date"
+            type="date"
+            value={toDate}
+            style={{marginLeft: 20}}
+            className={classes.textField}
+            onChange={event => setToDate(event.target.value)}
+            InputLabelProps={{
+              shrink: true,
+            }}
+          />
+          <Button
+            className={classes.saveButton}
+            onClick={() => filter()}
+            color='primary'
+            type="submit"
+            variant="contained"
+          >
+            GO
+          </Button>
+        </Grid>
+        <Grid item>
+          <Search
+            className={classes.search}
+            onSearch={handleSearch}
+          />
+        </Grid>
+      </Grid>
       {tokens.length > 0 && (
         <DepartmentTable
           className={classes.results}
