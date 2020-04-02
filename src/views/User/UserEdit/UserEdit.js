@@ -145,7 +145,7 @@ const UserEdit = () => {
       role: roles[user.roles[0].name],
       password: '',
       confirmPassword: ''
-    })
+    });
   };
 
   useEffect(() => {

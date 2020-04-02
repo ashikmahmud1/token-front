@@ -30,7 +30,7 @@ const UserForm = props => {
 
   const classes = useStyles();
 
-  const roles = [{key: 'ROLE_TOKENIST', value: 'Tokenist'}, {key: 'ROLE_STAFF', value: 'Staff'}];
+  const roles = [{key: 'ROLE_TOKENIST', value: 'tokenist'}, {key: 'ROLE_STAFF', value: 'staff'}];
 
   return (
     <Card
@@ -113,7 +113,7 @@ const UserForm = props => {
                 {roles.map(role => (
                   <option
                     key={role.key}
-                    value={role.key}
+                    value={role.value}
                   >
                     {role.value}
                   </option>
