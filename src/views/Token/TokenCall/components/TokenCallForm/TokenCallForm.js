@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {Component, useState} from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import {makeStyles} from '@material-ui/styles';
@@ -17,6 +17,7 @@ import useRouter from 'utils/useRouter';
 import SocketConnection from "../../../../../components/SocketConnection";
 import {addAuthorization} from "../../../../../utils/functions";
 import Autocomplete from "@material-ui/lab/Autocomplete";
+import ErrorSnackbar from "../../../../User/UserCreate/components/ErrorSnackbar";
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -47,6 +48,8 @@ class CallForm extends Component {
       counters: [],
       departments: [],
       departmentTokens: {},
+      openError: false,
+      errorMessage: '',
       counter_id: "",
       department_id: "",
       current_call: {department: null, token: null, counter: null},
@@ -69,6 +72,10 @@ class CallForm extends Component {
 
   onChangeType = (event, option) => {
     this.setState({type: option.value});
+  };
+
+  handleErrorClose = () => {
+    this.setState({openError: false});
   };
 
   onChangeText = event => {
@@ -222,6 +229,17 @@ class CallForm extends Component {
   };
 
   onNext = () => {
+    // check if there is selected counter and department
+    if (this.state.department_id === ''){
+      //set alert please select department
+      this.setState({errorMessage: "please select department.", openError: true});
+      return;
+    }
+    if (this.state.counter_id === '') {
+      //set alert please select counter
+      this.setState({errorMessage: "please select counter.", openError: true});
+      return;
+    }
     let disable_inputs = {...this.state.disable_inputs};
     disable_inputs.next = true;
     disable_inputs.recall = true;
@@ -415,6 +433,10 @@ class CallForm extends Component {
           onTokenDeleted={this.onTokenDeleted}
           onTokenReset={this.onTokenReset}
           onSetTokens={this.onSetTokens}/>
+        <ErrorSnackbar
+          message={this.state.errorMessage}
+          onClose={this.handleErrorClose}
+          open={this.state.openError}/>
       </Card>
     );
   }

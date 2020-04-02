@@ -3,7 +3,6 @@ import {makeStyles} from '@material-ui/styles';
 
 import {Page} from 'components';
 import {Header, QueueNumber} from './components';
-import Box from "@material-ui/core/Box";
 import SocketConnection from "../../components/SocketConnection";
 import Grid from "@material-ui/core/Grid";
 
@@ -50,7 +49,6 @@ const Dashboard = () => {
       className={classes.root}
       title="Total Waiting Queue"
     >
-      <Header/>
       <Grid container spacing={3}>
         {
           Object.keys(departmentTokens).map(key => {

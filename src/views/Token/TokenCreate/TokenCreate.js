@@ -3,6 +3,7 @@ import React, {useState} from "react";
 import Header from "./components/Header";
 import Page from "components/Page";
 import TokenForm from "./components/TokenForm";
+import Dashboard from "components/Dashboard";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -32,6 +33,7 @@ const TokenCreate = () => {
       <TokenForm
         profile={profile}
         className={classes.userForm}/>
+        <Dashboard/>
     </Page>
   )
 };
