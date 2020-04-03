@@ -230,7 +230,7 @@ class CallForm extends Component {
 
   onNext = () => {
     // check if there is selected counter and department
-    if (this.state.department_id === ''){
+    if (this.state.department_id === '') {
       //set alert please select department
       this.setState({errorMessage: "please select department.", openError: true});
       return;
@@ -302,7 +302,12 @@ class CallForm extends Component {
             disable_inputs.department = false;
             disable_inputs.counter = false;
             localStorage.setItem('current_call', JSON.stringify({department: null, token: null, counter: null}));
-            this.setState({current_call: {department: null, token: null, counter: null}, disable_inputs});
+            this.setState({
+              current_call: {department: null, token: null, counter: null},
+              disable_inputs,
+              errorMessage: "No token available.",
+              openError: true
+            });
           }
         })
     } else if (next_call.token !== null) {
@@ -320,7 +325,7 @@ class CallForm extends Component {
     } else {
       disable_inputs.department = false;
       disable_inputs.counter = false;
-      this.setState({disable_inputs});
+      this.setState({disable_inputs, errorMessage: "No token available.", openError: true});
     }
 
   };
