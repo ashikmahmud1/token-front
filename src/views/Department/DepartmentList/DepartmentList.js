@@ -83,6 +83,13 @@ const DepartmentList = () => {
     let filter_departments = departments.filter(d => parseInt(d.id) !== parseInt(id));
     setDepartments(filter_departments);
     setFilterDepartments(filter_departments);
+
+    // check if this department is saved in the localStorage
+    if (localStorage.getItem('department_counter')) {
+      let department_counter = JSON.parse(localStorage.getItem('department_counter'));
+      department_counter.department_id = id === department_counter.department_id ? '' : department_counter.department_id;
+      localStorage.setItem('department_counter', JSON.stringify(department_counter));
+    }
   };
   const deleteDepartment = id => {
     let myHeaders = new Headers();

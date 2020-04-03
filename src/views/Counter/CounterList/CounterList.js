@@ -54,6 +54,13 @@ const CounterList = () => {
     let filter_counters = counters.filter(d => parseInt(d.id) !== parseInt(id));
     setCounters(filter_counters);
     setFilterCounters(filter_counters);
+
+    // check if this counter is saved in the localStorage
+    if (localStorage.getItem('department_counter')) {
+      let department_counter = JSON.parse(localStorage.getItem('department_counter'));
+      department_counter.counter_id = id === department_counter.counter_id ? '' : department_counter.counter_id;
+      localStorage.setItem('department_counter', JSON.stringify(department_counter));
+    }
   };
   const deleteCounter = id => {
     let myHeaders = new Headers();
